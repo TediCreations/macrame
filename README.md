@@ -8,7 +8,7 @@
   <h3 align="center">macrame</h3>
 
   <p align="center">
-    Assembly/C/C++ utility to build embedded systems
+    Utility to build Assembly/C/C++ projects
     <br />
     <a href="https://github.com/tedicreations/macrame"><strong>Explore the docs »</strong></a>
     <br />
