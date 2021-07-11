@@ -1,3 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
-print("main.py")
+from .app import app_run
+
+if __name__ == '__main__':
+	app_run()

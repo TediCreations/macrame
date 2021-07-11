@@ -1,21 +1,18 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
-import os
+import sys
 
 try:
 	from pkg_resources import get_distribution, DistributionNotFound
 except Exception as e:
 	print(e)
-	os.exit(1)
+	sys.exit(1)
 
-__version__ = "?"
 try:
 	__version__ = get_distribution(__name__).version
 except DistributionNotFound:
-	pass
+	__version__ = "Unknown"
 
 __author__ = "Kanelis Elias"
 __email__ = "hkanelhs@yahoo.gr"
 __license__ = "MIT"
-
-from .app import App

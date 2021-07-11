@@ -1,4 +1,8 @@
+#!/usr/bin/env python
+
 import argparse
+# import argcomplete
+import os
 
 _commandList = []
 _parser = None
@@ -37,6 +41,12 @@ class Parser(object):
 		self.config()
 		_parser = self.parser
 
+	def error(self, message):
+		"""
+		Print error message and exit
+		"""
+		_parser.error(str(message))
+
 	def config(self):
 		"""
 		Configuration of arguments
@@ -51,8 +61,13 @@ class Parser(object):
 		pass
 
 	def run(self):
+		# argcomplete.autocomplete(_parser)
 		args = _parser.parse_args()
 		subcommand = _parser.parse_args().cmd
+
+		self.parser = _parser
+		self.logic(args)
+		# _parser = self.parser
 
 		rv = 0
 		global _commandList
@@ -63,6 +78,9 @@ class Parser(object):
 				rv = cmd_callback(args)
 
 		return rv
+
+	def logic(self, args):
+		pass
 
 
 class Command(object):
@@ -98,6 +116,12 @@ class Command(object):
 
 		self.config()
 
+	def error(self, message):
+		"""
+		Print error message and exit
+		"""
+		_parser.error(str(message))
+
 	def config(self):
 		"""
 		Configuration of arguments
@@ -115,3 +139,11 @@ class Command(object):
 		"""
 		print(f"Command '{self.name}' just run!")
 		return 0
+
+	def check_directory(self, directoryPath):
+		"""
+		Check if this is a valid directory
+		else exit with a message.
+		"""
+		if not os.path.isdir(directoryPath):
+			self.error(f"The directory {directoryPath} does not exist!")
