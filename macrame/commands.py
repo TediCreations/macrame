@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+Parser and build commands
+"""
+
 import os
 import sys
 from .core.cli import Parser

@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+Make and makefile manager
+"""
+
 from .core.exceptions import UserInputError
 from .core.utils import run_command
 from .core.utils import listPortNames

@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+Utility to build Assembly/C/C++ projects
+"""
+
 import sys
 
 try:

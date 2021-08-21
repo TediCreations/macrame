@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+App for launching macrame
+"""
+
 import sys
 from .commands import MyParser
 from .commands import BuildCommand

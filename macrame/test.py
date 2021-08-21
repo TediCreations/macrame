@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+Temporary test code
+"""
+
 import argparse
 from buildutil.configParser import ConfigParser
 from buildutil.configParser import array2Dict
