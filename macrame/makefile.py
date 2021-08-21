@@ -1,50 +1,48 @@
 #!/usr/bin/env python
 
-import os
 from .core.exceptions import UserInputError
 from .core.utils import run_command
+from .core.utils import listPortNames
 
 
-'''
-def getAbsResoursePath(relResoursePath):
-	"""
-	Get the absolute path of a resourse.
-
-	Resourse is a file located in the static directory.
-	"""
-
-	resoursePyPath = os.path.dirname(os.path.abspath(__file__))
-	rootPath = os.path.abspath(os.path.join(resoursePyPath, "../static"))
-	absResoursePath = os.path.join(rootPath, relResoursePath)
-	return absResoursePath
-'''
+# def getAbsResoursePath(relResoursePath):
+# 	"""
+# 	Get the absolute path of a resourse.
+#
+# 	Resourse is a file located in the static directory.
+# 	"""
+#
+# 	resoursePyPath = os.path.dirname(os.path.abspath(__file__))
+# 	rootPath = os.path.abspath(os.path.join(resoursePyPath, "../static"))
+# 	absResoursePath = os.path.join(rootPath, relResoursePath)
+# 	return absResoursePath
 
 
-class BuildManager(object):
+class BuildManager:
 	"""
 	Manages the way that Make is called
 	"""
 
-	def __init__(self, portName=None):
+	def __init__(self, port_name=None):
 		"""
 		Initialization
 
-		param: portName   The name of the port.
+		param: port_name   The name of the port.
 		"""
 		# Select makefile
-		if portName == "":
-			self.portName = None
+		if port_name == "":
+			self.port_name = None
 		else:
-			self.portName = portName
-		self.makefilePath = "Makefile"
-		# self.makefilePath = getAbsResoursePath("Makefile")
+			self.port_name = port_name
+		self.makefile_path = "Makefile"
+		# self.makefile_path = getAbsResoursePath("Makefile")
 
 		# List ports
-		self.ports = self._listPortNames()
+		self.ports = listPortNames()
 
 		# Validation
-		if self.portName is not None and self.ports is None:
-			raise UserInputError(f"Port name '{self.portName}' is not available")
+		if self.port_name is not None and self.ports is None:
+			raise UserInputError(f"Port name '{self.port_name}' is not available")
 
 	def build(self):
 		"""
@@ -52,13 +50,13 @@ class BuildManager(object):
 		"""
 		cmd = None
 		if self.ports is None:
-			cmd = f"make -f {self.makefilePath}"
-		elif self.portName is None and self.ports is not None:
-			cmd = f"make -f {self.makefilePath} PORT_NAME={self.ports[0]}"
-		elif self.portName in self.ports:
-			cmd = f"make -f {self.makefilePath} PORT_NAME={self.portName}"
+			cmd = f"make -f {self.makefile_path}"
+		elif self.port_name is None and self.ports is not None:
+			cmd = f"make -f {self.makefile_path} PORT_NAME={self.ports[0]}"
+		elif self.port_name in self.ports:
+			cmd = f"make -f {self.makefile_path} PORT_NAME={self.port_name}"
 		else:
-			raise UserInputError(f"Port name '{self.portName}' was not found in available ports")
+			raise UserInputError(f"Port name '{self.port_name}' was not found in available ports")
 
 		rv = run_command(cmd)
 
@@ -68,45 +66,5 @@ class BuildManager(object):
 		"""
 		Cleans the project's generated files
 		"""
-		rv = run_command(f"make -f {self.makefilePath} clean")
+		rv = run_command(f"make -f {self.makefile_path} clean")
 		return rv
-
-	def _listPortNames(self):
-		"""
-		Returns the available port names in the project.
-
-		Ports are directories in inside the 'root/port/' directory.
-		Port names are the name of the directories.
-
-		Returns:
-		- list of port name strings (if available).
-		- None if port dir is not available or if not any ports are available.
-		"""
-		rv = None
-		portNameList = list()
-		portPath = "port"
-		if os.path.isdir(portPath):
-			dirCandidateList = os.listdir(portPath)
-			for dirCandidate in dirCandidateList:
-				dirCandidatePath = os.path.join(portPath, dirCandidate)
-				if os.path.isdir(dirCandidatePath):
-					portNameList.append(dirCandidate)
-			portNameList.sort()
-
-		if len(portNameList) != 0:
-			rv = portNameList
-
-		return rv
-
-	def listPortNames(self):
-		"""
-		Returns the available port names in the project.
-
-		Ports are directories in inside the 'root/port/' directory.
-		Port names are the name of the directories.
-
-		Returns:
-		- list of port name strings (if available).
-		- None if port dir is not available or if not any ports are available.
-		"""
-		return self._listPortNames()

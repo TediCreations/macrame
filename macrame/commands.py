@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 import os
+import sys
 from .core.cli import Parser
 from .core.cli import Command
+from .core.utils import listPortNames
 from .makefile import BuildManager
 from . import __version__
 
@@ -17,10 +19,10 @@ class MyParser(Parser):
 		Configuration of arguments
 		"""
 
-		cwdPath = os.path.abspath(os.getcwd())
+		cwd_path = os.path.abspath(os.getcwd())
 		self.parser.add_argument(
 			'-C', '--directory',
-			default=cwdPath,
+			default=cwd_path,
 			help="changes current working directory")
 		self.parser.add_argument(
 			'-v', '--version',
@@ -34,7 +36,7 @@ class MyParser(Parser):
 		# Version information
 		if args.version:
 			print(f"Version: {__version__}")
-			exit(0)
+			sys.exit(0)
 
 		# Working directory
 		directory = os.path.abspath(args.directory)
@@ -43,7 +45,7 @@ class MyParser(Parser):
 		os.chdir(directory)
 
 
-class build_Command(Command):
+class BuildCommand(Command):
 	"""
 	Builds the software
 	"""
@@ -52,12 +54,12 @@ class build_Command(Command):
 		"""
 		Configuration of arguments
 		"""
-		"""
-		self.subparser.add_argument(
-			'-V', '--verbose',
-			action='store_true',
-			help='show extra information')
-		"""
+
+		# self.subparser.add_argument(
+		# 	'-V', '--verbose',
+		# 	action='store_true',
+		# 	help='show extra information')
+
 		# Port name
 		self.subparser.add_argument(
 			'-p', '--port',
@@ -69,15 +71,15 @@ class build_Command(Command):
 		"""
 		Runs the command
 		"""
-		buildManager = BuildManager(
-			portName=args.port
+		build_manager = BuildManager(
+			port_name=args.port
 		)
-		rv = buildManager.build()
+		rv = build_manager.build()
 
 		return rv
 
 
-class clean_Command(Command):
+class CleanCommand(Command):
 	"""
 	Removes generated files
 	"""
@@ -86,13 +88,13 @@ class clean_Command(Command):
 		"""
 		Runs the command
 		"""
-		buildManager = BuildManager()
-		rv = buildManager.clean()
+		build_manager = BuildManager()
+		rv = build_manager.clean()
 
 		return rv
 
 
-class info_Command(Command):
+class InfoCommand(Command):
 	"""
 	Shows project specific information
 	"""
@@ -101,13 +103,11 @@ class info_Command(Command):
 		"""
 		Runs the command
 		"""
-		buildManager = BuildManager()
-		ports = buildManager.listPortNames()
-
 		cwd = self.getArgument("directory")
-		projectName = os.path.basename(os.path.normpath(cwd))
+		project_name = os.path.basename(os.path.normpath(cwd))
+		ports = listPortNames()
 
-		txt = f"Project: {projectName}\n"
+		txt = f"Project: {project_name}\n"
 		txt += f"Ports:   {ports}\n"
 		print(txt)
 

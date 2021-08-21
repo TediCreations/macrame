@@ -2,13 +2,13 @@
 
 import sys
 from .commands import MyParser
-from .commands import build_Command
-from .commands import clean_Command
-from .commands import info_Command
-from .test import test_Command
+from .commands import BuildCommand
+from .commands import CleanCommand
+from .commands import InfoCommand
+from .test import TestCommand
 
 
-class App(object):
+class App:
 	"""
 	Macrame application
 	"""
@@ -22,16 +22,23 @@ class App(object):
 			"mac[rame]",
 			"Utility to build Assembly/C/C++ projects",
 			"Author: Kanelis Elias")
-		build_Command("build", "builds the software")
-		clean_Command("clean", "remove the generated files")
-		info_Command("info", "shows project specific information")
-		test_Command("test", "this is a test")
+		BuildCommand("build", "builds the software")
+		CleanCommand("clean", "remove the generated files")
+		InfoCommand("info", "shows project specific information")
+		TestCommand("test", "this is a test")
 
 	def run(self):
+		"""
+		Runs the app
+		"""
 		return self.parser.handle()
 
 
 def app_run():
+	"""
+	Convenient function to run the app
+	"""
+
 	app = App()
 	rv = app.run()
 	sys.exit(rv)

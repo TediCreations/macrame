@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
-from .core.cli import Command
 import argparse
-
 from buildutil.configParser import ConfigParser
 from buildutil.configParser import array2Dict
+from .core.cli import Command
 
 
-class test_Command(Command):
+class TestCommand(Command):
 	"""
 	Test Command
 	"""
@@ -37,8 +36,8 @@ class test_Command(Command):
 			["MAKE", "test", "dbg", {"dbg", "rel"}],
 		])
 
-		iniFilepath = "setup.ini"
-		parser = ConfigParser(iniFilepath, lst)
+		ini_filepath = "setup.ini"
+		parser = ConfigParser(ini_filepath, lst)
 		parser.setenv()
 
 		return 0
