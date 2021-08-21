@@ -1,35 +1,9 @@
 #!/usr/bin/env python
 
-from .cli import Command
 from .commands import MyParser
 from .commands import build_Command
 from .commands import clean_Command
-import argparse
-
-
-class test_Command(Command):
-	"""
-	Test Command
-	"""
-
-	def config(self):
-		"""
-		Configuration of arguments
-		"""
-		self.subparser.add_argument(
-			'-f',
-			'--file',
-			help='A readable file',
-			# metavar='FILE',
-			type=argparse.FileType('r'),
-			default=None)
-
-	def run(self, args):
-		"""
-		Runs the command
-		"""
-		print(f"File: '{args.file}'")
-		return 0
+from .test import test_Command
 
 
 class App(object):
