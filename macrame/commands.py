@@ -70,11 +70,11 @@ class build_Command(Command):
 		"""
 		Runs the command
 		"""
-
 		buildManager = BuildManager(
 			portName=args.port
 		)
 		rv = buildManager.build()
+
 		return rv
 
 
@@ -87,7 +87,7 @@ class clean_Command(Command):
 		"""
 		Runs the command
 		"""
-
 		buildManager = BuildManager()
 		rv = buildManager.clean()
+
 		return rv

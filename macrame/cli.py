@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+from .exceptions import UserInputError
 import argparse
 # import argcomplete
 import os
+import sys
 
 _commandList = []
 _parser = None
@@ -45,7 +47,10 @@ class Parser(object):
 		"""
 		Print error message and exit
 		"""
-		_parser.error(str(message))
+		# TODO: Is it good to quit from argparse like this?
+		# _parser.error("\033[0;31m" + str(message) + "\033[0m")
+		print("\033[0;31m[ERROR]\t" + str(message) + "\033[0m")
+		sys.exit(1)
 
 	def config(self):
 		"""
@@ -75,7 +80,10 @@ class Parser(object):
 			cmd_name = command['name']
 			cmd_callback = command['callback']
 			if cmd_name == subcommand:
-				rv = cmd_callback(args)
+				try:
+					rv = cmd_callback(args)
+				except UserInputError as e:
+					self.error(e)
 
 		return rv
 

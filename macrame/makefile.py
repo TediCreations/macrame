@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+from .exceptions import UserInputError
 from .utils import run_command
 
 
@@ -31,31 +32,36 @@ class BuildManager(object):
 		param: portName   The name of the port.
 		"""
 		# Select makefile
-		self.portName = portName
+		if portName == "":
+			self.portName = None
+		else:
+			self.portName = portName
 		self.makefilePath = "Makefile"
 		# self.makefilePath = getAbsResoursePath("Makefile")
 
+		# List ports
+		self.ports = self._listPortNames()
+
+		# Validation
+		if self.portName is not None and self.ports is None:
+			# 2
+			raise UserInputError(f"Port name '{self.portName}' is not available")
+
 	def build(self):
 		"""
-		Build the project
+		Builds the project
 		"""
-		# List ports
-		ports = self._listPorts()
-
-		if self.portName in ports:
-			print(f"'{self.portName}' found in {ports}")
+		cmd = None
+		if self.ports is None:
+			cmd = f"make -f {self.makefilePath}"
+		elif self.portName is None and self.ports is not None:
+			cmd = f"make -f {self.makefilePath} PORT_NAME={self.ports[0]}"
+		elif self.portName in self.ports:
+			cmd = f"make -f {self.makefilePath} PORT_NAME={self.portName}"
 		else:
-			print(f"'{self.portName}' NOT found in {ports}")
+			raise UserInputError(f"Port name '{self.portName}' was not found in available ports")
 
-		if ports is None:
-			print("No ports available!")
-			rv = 1
-		elif ports is None or len(ports) == 0:
-			# print("Ports directory is empty!")
-			rv = run_command(f"make -f {self.makefilePath}")
-			return 0
-		else:
-			rv = run_command(f"make -f {self.makefilePath} PORT_NAME={ports[0]}")
+		rv = run_command(cmd)
 
 		return rv
 
@@ -66,15 +72,18 @@ class BuildManager(object):
 		rv = run_command(f"make -f {self.makefilePath} clean")
 		return rv
 
-	def _listPorts(self):
+	def _listPortNames(self):
 		"""
-		Returns the available ports in the project
+		Returns the available port names in the project.
+
+		Ports are directories in inside the 'root/port/' directory.
+		Port names are the name of the directories.
 
 		Returns:
-		- list of strings with port names if available.
-		- Empty string is not any ports available.
-		- None if port dir is not available.
+		- list of port name strings (if available).
+		- None if port dir is not available or if not any ports are available.
 		"""
+		rv = None
 		portNameList = list()
 		portPath = "port"
 		if os.path.isdir(portPath):
@@ -84,11 +93,13 @@ class BuildManager(object):
 				if os.path.isdir(dirCandidatePath):
 					portNameList.append(dirCandidate)
 			portNameList.sort()
-		else:
-			portNameList = None
 
-		return portNameList
+		if len(portNameList) != 0:
+			rv = portNameList
 
+		return rv
+
+	'''
 	def listPorts(self):
 		"""
 		Returns the available ports in the project
@@ -111,3 +122,4 @@ class BuildManager(object):
 			portNameList = None
 
 		return portNameList
+	'''
