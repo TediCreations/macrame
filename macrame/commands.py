@@ -21,7 +21,7 @@ class MyParser(Parser):
 		self.parser.add_argument(
 			'-C', '--directory',
 			default=cwdPath,
-			help="path of the code to be build root directory")
+			help="changes current working directory")
 		self.parser.add_argument(
 			'-v', '--version',
 			action='store_true',
@@ -58,6 +58,12 @@ class build_Command(Command):
 			action='store_true',
 			help='show extra information')
 		"""
+		# Port name
+		self.subparser.add_argument(
+			'-p', '--port',
+			default="",
+			type=str,
+			help="the port name.")
 		pass
 
 	def run(self, args):
@@ -65,7 +71,9 @@ class build_Command(Command):
 		Runs the command
 		"""
 
-		buildManager = BuildManager()
+		buildManager = BuildManager(
+			portName=args.port
+		)
 		rv = buildManager.build()
 		return rv
 

@@ -24,11 +24,14 @@ class BuildManager(object):
 	Manages the way that Make is called
 	"""
 
-	def __init__(self):
+	def __init__(self, portName=None):
 		"""
 		Initialization
+
+		param: portName   The name of the port.
 		"""
 		# Select makefile
+		self.portName = portName
 		self.makefilePath = "Makefile"
 		# self.makefilePath = getAbsResoursePath("Makefile")
 
@@ -39,11 +42,16 @@ class BuildManager(object):
 		# List ports
 		ports = self._listPorts()
 
+		if self.portName in ports:
+			print(f"'{self.portName}' found in {ports}")
+		else:
+			print(f"'{self.portName}' NOT found in {ports}")
+
 		if ports is None:
 			print("No ports available!")
 			rv = 1
-		elif len(ports) == 0:
-			print("Ports directory is empty!")
+		elif ports is None or len(ports) == 0:
+			# print("Ports directory is empty!")
 			rv = run_command(f"make -f {self.makefilePath}")
 			return 0
 		else:
@@ -59,6 +67,29 @@ class BuildManager(object):
 		return rv
 
 	def _listPorts(self):
+		"""
+		Returns the available ports in the project
+
+		Returns:
+		- list of strings with port names if available.
+		- Empty string is not any ports available.
+		- None if port dir is not available.
+		"""
+		portNameList = list()
+		portPath = "port"
+		if os.path.isdir(portPath):
+			dirCandidateList = os.listdir(portPath)
+			for dirCandidate in dirCandidateList:
+				dirCandidatePath = os.path.join(portPath, dirCandidate)
+				if os.path.isdir(dirCandidatePath):
+					portNameList.append(dirCandidate)
+			portNameList.sort()
+		else:
+			portNameList = None
+
+		return portNameList
+
+	def listPorts(self):
 		"""
 		Returns the available ports in the project
 
