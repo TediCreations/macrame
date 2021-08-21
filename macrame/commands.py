@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import os
-from .cli import Parser
-from .cli import Command
+from .core.cli import Parser
+from .core.cli import Command
 from .makefile import BuildManager
 from . import __version__
 
@@ -91,3 +91,25 @@ class clean_Command(Command):
 		rv = buildManager.clean()
 
 		return rv
+
+
+class info_Command(Command):
+	"""
+	Shows project specific information
+	"""
+
+	def run(self, args):
+		"""
+		Runs the command
+		"""
+		buildManager = BuildManager()
+		ports = buildManager.listPortNames()
+
+		cwd = self.getArgument("directory")
+		projectName = os.path.basename(os.path.normpath(cwd))
+
+		txt = f"Project: {projectName}\n"
+		txt += f"Ports:   {ports}\n"
+		print(txt)
+
+		return 0

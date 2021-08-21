@@ -101,7 +101,6 @@ class Command(object):
 		"""
 		Creates an argument command
 
-		parser: The argparse parser
 		name: The name of the command
 		help: Description of the command or None
 		"""
@@ -127,8 +126,13 @@ class Command(object):
 	def error(self, message):
 		"""
 		Print error message and exit
+
+		message: The error message
 		"""
-		_parser.error(str(message))
+		# TODO: Is it good to quit from argparse like this?
+		# _parser.error("\033[0;31m" + str(message) + "\033[0m")
+		print("\033[0;31m[ERROR]\t" + str(message) + "\033[0m")
+		sys.exit(1)
 
 	def config(self):
 		"""
@@ -143,7 +147,9 @@ class Command(object):
 
 	def run(self, args):
 		"""
-		Configuration of arguments
+		Executes the command
+
+		args: The command arguments
 		"""
 		print(f"Command '{self.name}' just run!")
 		return 0
@@ -152,6 +158,24 @@ class Command(object):
 		"""
 		Check if this is a valid directory
 		else exit with a message.
+
+		directoryPath: The directory path to check for validity
 		"""
 		if not os.path.isdir(directoryPath):
-			self.error(f"The directory {directoryPath} does not exist!")
+			self.error(f"The directory {directoryPath} does not exist")
+
+	def getArgument(self, name):
+		"""
+		Gets the value of an argument
+
+		label: The argument name
+		"""
+
+		args = vars(_parser.parse_args())
+		rv = None
+		try:
+			rv = args[name]
+		except KeyError:
+			self.error(f"Argument '{name}' does not exist")
+
+		return rv

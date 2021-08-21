@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from .cli import Command
+from .core.cli import Command
 import argparse
 
 from buildutil.configParser import ConfigParser

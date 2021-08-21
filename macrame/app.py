@@ -3,6 +3,7 @@
 from .commands import MyParser
 from .commands import build_Command
 from .commands import clean_Command
+from .commands import info_Command
 from .test import test_Command
 
 
@@ -22,6 +23,7 @@ class App(object):
 			"Author: Kanelis Elias")
 		build_Command("build", "builds the software")
 		clean_Command("clean", "remove the generated files")
+		info_Command("info", "shows project specific information")
 		test_Command("test", "this is a test")
 
 	def run(self):

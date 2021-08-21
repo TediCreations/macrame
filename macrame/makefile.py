@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import os
-from .exceptions import UserInputError
-from .utils import run_command
+from .core.exceptions import UserInputError
+from .core.utils import run_command
 
 
 '''
@@ -44,7 +44,6 @@ class BuildManager(object):
 
 		# Validation
 		if self.portName is not None and self.ports is None:
-			# 2
 			raise UserInputError(f"Port name '{self.portName}' is not available")
 
 	def build(self):
@@ -99,27 +98,15 @@ class BuildManager(object):
 
 		return rv
 
-	'''
-	def listPorts(self):
+	def listPortNames(self):
 		"""
-		Returns the available ports in the project
+		Returns the available port names in the project.
+
+		Ports are directories in inside the 'root/port/' directory.
+		Port names are the name of the directories.
 
 		Returns:
-		- list of strings with port names if available.
-		- Empty string is not any ports available.
-		- None if port dir is not available.
+		- list of port name strings (if available).
+		- None if port dir is not available or if not any ports are available.
 		"""
-		portNameList = list()
-		portPath = "port"
-		if os.path.isdir(portPath):
-			dirCandidateList = os.listdir(portPath)
-			for dirCandidate in dirCandidateList:
-				dirCandidatePath = os.path.join(portPath, dirCandidate)
-				if os.path.isdir(dirCandidatePath):
-					portNameList.append(dirCandidate)
-			portNameList.sort()
-		else:
-			portNameList = None
-
-		return portNameList
-	'''
+		return self._listPortNames()
