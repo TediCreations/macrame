@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 from .commands import MyParser
 from .commands import build_Command
 from .commands import clean_Command
@@ -33,7 +34,7 @@ class App(object):
 def app_run():
 	app = App()
 	rv = app.run()
-	exit(rv)
+	sys.exit(rv)
 
 
 if __name__ == '__main__':

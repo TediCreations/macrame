@@ -64,7 +64,6 @@ class build_Command(Command):
 			default="",
 			type=str,
 			help="the port name.")
-		pass
 
 	def run(self, args):
 		"""
