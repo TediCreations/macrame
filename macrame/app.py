@@ -27,7 +27,7 @@ class App(object):
 		test_Command("test", "this is a test")
 
 	def run(self):
-		return self.parser.run()
+		return self.parser.handle()
 
 
 def app_run():

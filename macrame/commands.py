@@ -27,7 +27,7 @@ class MyParser(Parser):
 			action='store_true',
 			help="output version and exit")
 
-	def logic(self, args):
+	def run(self, args):
 		"""
 		Configuration of arguments
 		"""

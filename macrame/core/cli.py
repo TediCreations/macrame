@@ -65,13 +65,13 @@ class Parser(object):
 		"""
 		pass
 
-	def run(self):
+	def handle(self):
 		# argcomplete.autocomplete(_parser)
 		args = _parser.parse_args()
 		subcommand = _parser.parse_args().cmd
 
 		self.parser = _parser
-		self.logic(args)
+		self.run(args)
 		# _parser = self.parser
 
 		rv = 0
@@ -87,7 +87,7 @@ class Parser(object):
 
 		return rv
 
-	def logic(self, args):
+	def run(self, args):
 		pass
 
 
