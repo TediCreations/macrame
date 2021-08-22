@@ -1,3 +1,5 @@
+DOCS_DIR = docs/_build
+
 .PHONY: package
 package:
 	@./setup.py sdist
@@ -10,8 +12,15 @@ clean:
 	@rm -rf .eggs
 	@rm -rf .pytest_cache
 	@py3clean .
+	@rm -rf ${DOCS_DIR}
 	@echo "Done"
 
 .PHONY: publish
 publish: clean package
-	twine upload dist/*
+	@twine upload dist/*
+
+.PHONY: docs
+docs:
+	@sphinx-apidoc -q --separate --force -o docs/gen/ macrame/ --implicit-namespaces -M --ext-todo
+	@sphinx-build -W -a -q -b dirhtml "docs/" "${DOCS_DIR}/dirhtml/"
+	@sphinx-build -W -a -q -b html "docs/" "${DOCS_DIR}/html/"

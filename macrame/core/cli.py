@@ -168,7 +168,7 @@ class Command(object):
 		"""
 		Gets the value of an argument
 
-		label: The argument name
+		name: The argument name
 		"""
 
 		args = vars(_parser.parse_args())

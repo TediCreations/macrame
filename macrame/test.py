@@ -18,6 +18,7 @@ class TestCommand(Command):
 	def config(self):
 		"""
 		Configuration of arguments
+
 		"""
 		self.subparser.add_argument(
 			'-f',
