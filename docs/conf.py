@@ -35,6 +35,7 @@ copyright = f"{year}, {about['__author__']}"
 author = about['__author__']
 
 # The full version, including alpha/beta/rc tags
+version = about['__version__']
 release = about['__version__']
 
 

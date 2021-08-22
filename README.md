@@ -10,7 +10,7 @@
   <p align="center">
     Utility to build Assembly/C/C++ projects
     <br />
-    <a href="https://github.com/tedicreations/macrame"><strong>Explore the docs »</strong></a>
+    <a href="https://macrame.readthedocs.io/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/tedicreations/macrame">View Demo</a>
