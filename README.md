@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/tedicreations/macrame">
-    <img src="https://raw.githubusercontent.com/TediCreations/macrame/master/images/logo.png?token=ABT27TS52XRQKM25EB3KM2TA4YHIG" alt="Logo" width="80" height="80">
+    <img src="https://raw.githubusercontent.com/TediCreations/macrame/master/images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">macrame</h3>
