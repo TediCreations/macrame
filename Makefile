@@ -24,3 +24,7 @@ docs:
 	@sphinx-apidoc -q --separate --force -o docs/gen/ macrame/ --implicit-namespaces -M --ext-todo
 	@sphinx-build -W -a -q -b dirhtml "docs/" "${DOCS_DIR}/dirhtml/"
 	@sphinx-build -W -a -q -b html "docs/" "${DOCS_DIR}/html/"
+
+.PHONY: lint
+lint:
+	@pylint macrame

@@ -1,0 +1,9 @@
+[FORMAT]
+indent-string=\t
+
+[BASIC]
+good-names=
+	e,
+	rv
+
+# disable=W,R,E,C
