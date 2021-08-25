@@ -195,11 +195,19 @@ endif
 #
 
 #.................................................
+#    Paths
+
+MAKEFILE_FILEPATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_DIRPATH  := $(dir $(MAKEFILE_FILEPATH))
+
+TESTSMK_FILEPATH := $(MAKEFILE_DIRPATH)tests.mk
+
+COMPILERMK_FILEPATH := $(MAKEFILE_DIRPATH)compiler.mk
+
+#.................................................
 #    Project's name
 
-MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
-MKFILE_DIR  := $(dir $(MKFILE_PATH))
-PROJ_NAME   := $(shell basename $(MKFILE_DIR))
+PROJ_NAME   := $(shell basename $(MAKEFILE_DIRPATH))
 
 #.................................................
 #    Host's OS
@@ -271,7 +279,6 @@ LD  = gcc
 SZ  = size
 OC  = objcopy
 NM  = nm
-AR  = ar
 
 CPPFLAGS =
 ASFLAGS  =
@@ -334,7 +341,7 @@ endif
 #.................................................
 #    Auxiliary files that build depends on
 
-AUX = Makefile compiler.mk
+AUX = $(MAKEFILE_FILEPATH) $(COMPILERMK_FILEPATH)
 
 ifdef PORT_NAME
   ifneq (,$(wildcard port/$(PORT_NAME)/Makefile))
@@ -348,19 +355,16 @@ endif
 AS_SRCs  += $(shell find "src/" -name "*.[s|S]")
 C_SRCs   += $(shell find "src/" -name "*.[c|C]")
 CXX_SRCs += $(shell find "src/" -name "*.cpp")
-AR_SRCs  += $(shell find "src/" -name "*.[s|S|c|C|cpp]")
 
 ifdef PORT_NAME
   AS_SRCs  += $(shell find "port/$(PORT_NAME)/" -name "*.[s|S]")
   C_SRCs   += $(shell find "port/$(PORT_NAME)/" -name "*.[c|C]")
   CXX_SRCs += $(shell find "port/$(PORT_NAME)/" -name "*.cpp")
-  AR_SRCs  += $(shell find "port/$(PORT_NAME)/" -name "*.[s|S|c|C|cpp]")
 endif
 
 AS_SRCs  := $(sort $(AS_SRCs))
 C_SRCs   := $(sort $(C_SRCs))
 CXX_SRCs := $(sort $(CXX_SRCs))
-AR_SRCs  := $(sort $(AR_SRCs))
 
 #.................................................
 #    Output dir
@@ -383,23 +387,8 @@ else
 endif
 
 OBJS=  $(sort $(AS_SRCs:%.s=$(OBJ_OUTDIR)%.o))
-# OBJS+= $(sort $(AS_SRCs:%.S=$(OBJ_OUTDIR)%.o))
 OBJS+= $(sort $(C_SRCs:%.c=$(OBJ_OUTDIR)%.o))
-# OBJS+= $(sort $(C_SRCs:%.C=$(OBJ_OUTDIR)%.o))
 OBJS+= $(sort $(CXX_SRCs:%.cpp=$(OBJ_OUTDIR)%.o))
-
-# AR_OBJS=$(sort $(AR_SRCs:%.[s|S|c|C|cpp]=$(OBJ_OUTDIR)%.o))
-
-
-#AR_OBJS = $(AR_SRCs:%.[s|S|c|C|cpp]=$(OBJ_OUTDIR)%.o)
-AR_OBJS = $(AR_SRCs:%.s=$(OBJ_OUTDIR)%.o)
-
-
-#AR_OBJS  = $(sort $(AR_SRCs:%.s=$(OBJ_OUTDIR)%.o))
-#AR_OBJS += $(sort $(AR_SRCs:%.S=$(OBJ_OUTDIR)%.o))
-#AR_OBJS += $(sort $(AR_SRCs:%.c=$(OBJ_OUTDIR)%.o))
-#AR_OBJS += $(sort $(AR_SRCs:%.C=$(OBJ_OUTDIR)%.o))
-#AR_OBJS += $(sort $(AR_SRCs:%.cpp=$(OBJ_OUTDIR)%.o))
 
 
 #.................................................
@@ -416,7 +405,7 @@ endif
 #    Compiler
 #
 
--include compiler.mk
+-include $(COMPILERMK_FILEPATH)
 
 ifdef PORT_NAME
   -include port/$(PORT_NAME)/Makefile
@@ -499,7 +488,6 @@ build: check\
        version\
        tags\
        $(BIN_OUTDIR)$(PROJ_NAME).elf\
-       $(BIN_OUTDIR)lib$(PROJ_NAME).a\
        $(BIN_OUTDIR)$(PROJ_NAME).bin\
        $(BIN_OUTDIR)$(PROJ_NAME).hex\
        $(BIN_OUTDIR)$(PROJ_NAME).sym\
@@ -601,23 +589,8 @@ $(BIN_OUTDIR)$(PROJ_NAME).elf: $(OBJS)
 	@$(ECHO_E) $(GREEN)"OK"$(RESET)
 
 
-# Create lib
-$(BIN_OUTDIR)lib$(PROJ_NAME).a: $(AR_OBJS) $(AUX)
-	$(call notify,"AR  ","$@")
-	@$(MKDIR_P) $(dir $@)
-	@$(AR) rcs $@ $<
-	@$(ECHO_E) $(GREEN)"OK"$(RESET)
-	#@echo $<
-	#@echo ${AR_SRCs}
-	@echo test ${AR_OBJS} end
-	#@echo $(sort $(AR_SRCs:%.[s|S|c|C|cpp]=$(OBJ_OUTDIR)%.o))
-	#@echo $(filter-out */main.o, $(sort $(AR_SRCs:%.[s|S|c|C|cpp]=$(OBJ_OUTDIR)%.o)))
-	#@echo $(filter-out */main.o, $(sort $(AR_OBJS:%.*=$(OBJ_OUTDIR)%.o)))
-
-	# @echo $(wildcard src/*.o)
-
 # Bin
-%.bin: %.elf $(AUX)
+%.bin: %.elf
 	$(call notify,"BIN ","$@")
 	@$(MKDIR_P) $(dir $@)
 	@$(OC) -O binary -S $< $@
@@ -654,9 +627,9 @@ $(BIN_OUTDIR)lib$(PROJ_NAME).a: $(AR_OBJS) $(AUX)
 .PHONY: runTests
 runTests:
 ifdef PORT_NAME
-	@$(MAKE) PORT_NAME=posix --no-print-directory -f tests.mk runCppUtest
+	@$(MAKE) PORT_NAME=posix --no-print-directory -f $(TESTSMK_FILEPATH) runCppUtest
 else
-	@$(MAKE) --no-print-directory -f tests.mk runCppUtest
+	@$(MAKE) --no-print-directory -f $(TESTSMK_FILEPATH) runCppUtest
 endif
 
 ################################################################################

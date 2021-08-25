@@ -4,22 +4,23 @@
 Make and makefile manager
 """
 
+import os
 from .core.exceptions import UserInputError
 from .core.utils import run_command
 from .core.utils import listPortNames
 
 
-# def getAbsResoursePath(relResoursePath):
-# 	"""
-# 	Get the absolute path of a resourse.
-#
-# 	Resourse is a file located in the static directory.
-# 	"""
-#
-# 	resoursePyPath = os.path.dirname(os.path.abspath(__file__))
-# 	rootPath = os.path.abspath(os.path.join(resoursePyPath, "../static"))
-# 	absResoursePath = os.path.join(rootPath, relResoursePath)
-# 	return absResoursePath
+def get_abs_resourse_path(rel_resourse_path):
+	"""
+	Get the absolute path of a resourse.
+
+	Resourse is a file located in the static directory.
+	"""
+
+	resourse_py_path = os.path.dirname(os.path.abspath(__file__))
+	root_path = os.path.abspath(os.path.join(resourse_py_path, "../static"))
+	abs_resourse_path = os.path.join(root_path, rel_resourse_path)
+	return abs_resourse_path
 
 
 class BuildManager:
@@ -38,8 +39,8 @@ class BuildManager:
 			self.port_name = None
 		else:
 			self.port_name = port_name
-		self.makefile_path = "Makefile"
-		# self.makefile_path = getAbsResoursePath("Makefile")
+		# self.makefile_path = "Makefile"
+		self.makefile_path = get_abs_resourse_path("Makefile")
 
 		# List ports
 		self.ports = listPortNames()

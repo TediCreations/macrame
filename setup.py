@@ -43,7 +43,7 @@ setup(
 	download_url=f"https://github.com/TediCreations/{packageName}/archive/" + about['__version__'] + '.tar.gz',
 	keywords=['build', 'make', 'util'],
 	install_requires=dependencies,
-	# package_data={'alphabhta': ['conf/make/*']},
+	package_data={'macrame': ['../static/*']},
 	include_package_data=True,
 	entry_points={
 		"console_scripts": [
