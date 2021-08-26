@@ -39,3 +39,20 @@ def listPortNames():
 		rv = portNameList
 
 	return rv
+
+
+def egrep(keywords, whole_words=False):
+	"""
+	Runs egrep
+
+	param: keywords       Keywords to search for
+	param: whole_words    Search for whole words
+	"""
+	egrep_flags = "-i -nr -R --color"
+
+	if whole_words:
+		egrep_flags += " -w"
+
+	cmd = f"egrep {egrep_flags} '{keywords}' src/ inc/ port/ || true"
+	rv = run_command(cmd)
+	return rv

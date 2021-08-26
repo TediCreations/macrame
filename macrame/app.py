@@ -9,6 +9,7 @@ from .commands import MyParser
 from .commands import BuildCommand
 from .commands import CleanCommand
 from .commands import InfoCommand
+from .commands import TodoCommand
 from .test import TestCommand
 
 
@@ -29,6 +30,7 @@ class App:
 		BuildCommand("build", "builds the software")
 		CleanCommand("clean", "remove the generated files")
 		InfoCommand("info", "shows project specific information")
+		TodoCommand("todo", "Lists programmer's todo/bug/fix keywords")
 		TestCommand("test", "this is a test")
 
 	def run(self):
