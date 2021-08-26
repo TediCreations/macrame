@@ -28,19 +28,23 @@ class BuildManager:
 	Manages the way that Make is called
 	"""
 
-	def __init__(self, port_name=None):
+	def __init__(self, port_name=None, use_local_makefile=True):
 		"""
 		Initialization
 
 		param: port_name   The name of the port.
+		param: use_local_makefile   True to select local makefile. False to select static makefile.
 		"""
 		# Select makefile
 		if port_name == "":
 			self.port_name = None
 		else:
 			self.port_name = port_name
-		# self.makefile_path = "Makefile"
-		self.makefile_path = get_abs_resourse_path("Makefile")
+
+		# Decide upon local or remote makefile
+		self.makefile_path = "Makefile"
+		if use_local_makefile is False:
+			self.makefile_path = get_abs_resourse_path("Makefile")
 
 		# List ports
 		self.ports = listPortNames()

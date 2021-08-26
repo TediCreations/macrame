@@ -59,10 +59,17 @@ class BuildCommand(Command):
 		Configuration of arguments
 		"""
 
-		# self.subparser.add_argument(
-		# 	'-V', '--verbose',
-		# 	action='store_true',
-		# 	help='show extra information')
+		# Local or remote makefile
+		self.subparser.add_argument(
+			'-r', '--remote',
+			default=False,
+			action='store_true',
+			help="use the tools internal build system config files (excludes '--local')")
+		self.subparser.add_argument(
+			'-l', '--local',
+			dest='remote',
+			action='store_false',
+			help="use the project's local build system config files (excludes '--remote')")
 
 		# Port name
 		self.subparser.add_argument(
@@ -76,7 +83,8 @@ class BuildCommand(Command):
 		Runs the command
 		"""
 		build_manager = BuildManager(
-			port_name=args.port
+			port_name=args.port,
+			use_local_makefile=not args.remote
 		)
 		rv = build_manager.build()
 
