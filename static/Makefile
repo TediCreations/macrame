@@ -198,16 +198,17 @@ endif
 #    Paths
 
 MAKEFILE_FILEPATH := $(abspath $(lastword $(MAKEFILE_LIST)))
-MAKEFILE_DIRPATH  := $(dir $(MAKEFILE_FILEPATH))
+BUILDSYSTEM_DIRPATH := $(dir $(MAKEFILE_FILEPATH))
 
-TESTSMK_FILEPATH := $(MAKEFILE_DIRPATH)tests.mk
+TESTSMK_FILEPATH := $(BUILDSYSTEM_DIRPATH)tests.mk
 
-COMPILERMK_FILEPATH := $(MAKEFILE_DIRPATH)compiler.mk
+COMPILERMK_FILEPATH := $(BUILDSYSTEM_DIRPATH)compiler.mk
+
 
 #.................................................
 #    Project's name
 
-PROJ_NAME   := $(shell basename $(MAKEFILE_DIRPATH))
+PROJ_NAME   := $(shell basename $(PWD))
 
 #.................................................
 #    Host's OS
@@ -462,7 +463,7 @@ size: $(BIN_OUTDIR)$(PROJ_NAME).size
 .PHONY: version
 version:
 	$(call notify,"Version ","")
-	@./scripts/get_version.sh 1>/dev/null
+	@$(BUILDSYSTEM_DIRPATH)scripts/get_version.sh 1>/dev/null
 	@$(ECHO_E) $(GREEN)"OK"$(RESET)
 
 .PHONY: tags
