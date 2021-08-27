@@ -124,6 +124,48 @@ class CleanCommand(Command):
 		return rv
 
 
+class RunCommand(Command):
+	"""
+	Executes the program under development
+	"""
+
+	def config(self):
+		"""
+		Configuration of arguments
+		"""
+
+		# Local or remote makefile
+		self.subparser.add_argument(
+			'-r', '--remote',
+			default=False,
+			action='store_true',
+			help="use the tools internal build system config files (excludes '--local')")
+		self.subparser.add_argument(
+			'-l', '--local',
+			dest='remote',
+			action='store_false',
+			help="use the project's local build system config files (excludes '--remote')")
+
+		# Port name
+		self.subparser.add_argument(
+			'-p', '--port',
+			default="",
+			type=str,
+			help="the port name.")
+
+	def run(self, args):
+		"""
+		Runs the command
+		"""
+		build_manager = BuildManager(
+			port_name=args.port,
+			use_local_makefile=not args.remote
+		)
+		rv = build_manager.run()
+
+		return rv
+
+
 class InfoCommand(Command):
 	"""
 	Shows project specific information

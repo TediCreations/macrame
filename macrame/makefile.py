@@ -77,3 +77,21 @@ class BuildManager:
 		"""
 		rv = run_command(f"make -f {self.makefile_path} clean")
 		return rv
+
+	def run(self):
+		"""
+		Executes the program under development
+		"""
+		cmd = None
+		if self.ports is None:
+			cmd = f"make -f {self.makefile_path} run"
+		elif self.port_name is None and self.ports is not None:
+			cmd = f"make -f {self.makefile_path} PORT_NAME={self.ports[0]} run"
+		elif self.port_name in self.ports:
+			cmd = f"make -f {self.makefile_path} PORT_NAME={self.port_name} run"
+		else:
+			raise UserInputError(f"Port name '{self.port_name}' was not found in available ports")
+
+		rv = run_command(cmd)
+
+		return rv

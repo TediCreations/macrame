@@ -536,6 +536,11 @@ info:
 
 .PHONY: run
 run:
+ifndef PORT_NAME
+ifdef AVAILABLE_PORTS
+	$(error "There are available ports. Please select one!")
+endif
+endif
 	@if [ ! -f commands ]; then
 		@$(RLWRAP) -H .cmd_history $(call runApp)
 	@else

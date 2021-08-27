@@ -7,6 +7,7 @@ App for launching macrame
 import sys
 from .commands import MyParser
 from .commands import BuildCommand
+from .commands import RunCommand
 from .commands import CleanCommand
 from .commands import InfoCommand
 from .commands import TodoCommand
@@ -29,6 +30,7 @@ class App:
 			"Author: Kanelis Elias")
 		BuildCommand("build", "builds the software")
 		CleanCommand("clean", "remove the generated files")
+		RunCommand("run", "executes the program")
 		InfoCommand("info", "shows project specific information")
 		TodoCommand("todo", "Lists programmer's todo/bug/fix keywords")
 		TestCommand("test", "this is a test")
