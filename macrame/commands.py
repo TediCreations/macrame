@@ -97,11 +97,28 @@ class CleanCommand(Command):
 	Removes generated files
 	"""
 
+	def config(self):
+		"""
+		Configuration of arguments
+		"""
+
+		# Local or remote makefile
+		self.subparser.add_argument(
+			'-r', '--remote',
+			default=False,
+			action='store_true',
+			help="use the tools internal build system config files (excludes '--local')")
+		self.subparser.add_argument(
+			'-l', '--local',
+			dest='remote',
+			action='store_false',
+			help="use the project's local build system config files (excludes '--remote')")
+
 	def run(self, args):
 		"""
 		Runs the command
 		"""
-		build_manager = BuildManager()
+		build_manager = BuildManager(use_local_makefile=not args.remote)
 		rv = build_manager.clean()
 
 		return rv
