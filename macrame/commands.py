@@ -62,15 +62,10 @@ class BuildCommand(Command):
 
 		# Local or remote makefile
 		self.subparser.add_argument(
-			'-r', '--remote',
+			'-r', '--force_remote',
 			default=False,
 			action='store_true',
-			help="use the tools internal build system config files (excludes '--local')")
-		self.subparser.add_argument(
-			'-l', '--local',
-			dest='remote',
-			action='store_false',
-			help="use the project's local build system config files (excludes '--remote')")
+			help="use the tools internal build system config files")
 
 		# Port name
 		self.subparser.add_argument(
@@ -85,7 +80,7 @@ class BuildCommand(Command):
 		"""
 		build_manager = BuildManager(
 			port_name=args.port,
-			use_local_makefile=not args.remote
+			use_local_makefile=not args.force_remote
 		)
 		rv = build_manager.build()
 
@@ -104,21 +99,16 @@ class CleanCommand(Command):
 
 		# Local or remote makefile
 		self.subparser.add_argument(
-			'-r', '--remote',
+			'-r', '--force_remote',
 			default=False,
 			action='store_true',
-			help="use the tools internal build system config files (excludes '--local')")
-		self.subparser.add_argument(
-			'-l', '--local',
-			dest='remote',
-			action='store_false',
-			help="use the project's local build system config files (excludes '--remote')")
+			help="use the tools internal build system config files")
 
 	def run(self, args):
 		"""
 		Runs the command
 		"""
-		build_manager = BuildManager(use_local_makefile=not args.remote)
+		build_manager = BuildManager(use_local_makefile=not args.force_remote)
 		rv = build_manager.clean()
 
 		return rv
@@ -136,15 +126,10 @@ class RunCommand(Command):
 
 		# Local or remote makefile
 		self.subparser.add_argument(
-			'-r', '--remote',
+			'-r', '--force_remote',
 			default=False,
 			action='store_true',
-			help="use the tools internal build system config files (excludes '--local')")
-		self.subparser.add_argument(
-			'-l', '--local',
-			dest='remote',
-			action='store_false',
-			help="use the project's local build system config files (excludes '--remote')")
+			help="use the tools internal build system config files")
 
 		# Port name
 		self.subparser.add_argument(
@@ -159,7 +144,7 @@ class RunCommand(Command):
 		"""
 		build_manager = BuildManager(
 			port_name=args.port,
-			use_local_makefile=not args.remote
+			use_local_makefile=not args.force_remote
 		)
 		rv = build_manager.run()
 

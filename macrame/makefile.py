@@ -10,6 +10,17 @@ from .core.utils import run_command
 from .core.utils import listPortNames
 
 
+def is_makefile_exist():
+	"""
+	Checks is a local Makefile exists in the current working directory
+	"""
+	rv = False
+	if os.path.isfile("Makefile"):
+		rv = True
+
+	return rv
+
+
 def get_abs_resourse_path(rel_resourse_path):
 	"""
 	Get the absolute path of a resourse.
@@ -42,9 +53,9 @@ class BuildManager:
 			self.port_name = port_name
 
 		# Decide upon local or remote makefile
-		self.makefile_path = "Makefile"
-		if use_local_makefile is False:
-			self.makefile_path = get_abs_resourse_path("Makefile")
+		self.makefile_path = get_abs_resourse_path("Makefile")
+		if is_makefile_exist() is True and use_local_makefile is True:
+			self.makefile_path = "Makefile"
 
 		# List ports
 		self.ports = listPortNames()
