@@ -37,6 +37,7 @@ with open("requirements.txt") as f:
 	dependencies = [line for line in f if "==" in line]
 	dependencies = [s.rstrip() for s in dependencies]
 
+
 # ------------------------------------------------------------------------------
 # Setup config
 setup(
@@ -56,7 +57,7 @@ setup(
 	download_url=f"https://github.com/TediCreations/{packageName}/archive/" + about['__version__'] + '.tar.gz',
 	keywords=['build', 'make', 'util'],
 	install_requires=dependencies,
-	package_data={'macrame': list_all_files_recursively('static/')},
+	package_data={'macrame': ["../" + filepath for filepath in list_all_files_recursively('static/')]},
 	include_package_data=True,
 	entry_points={
 		"console_scripts": [
