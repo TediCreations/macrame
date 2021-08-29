@@ -1,9 +1,22 @@
 #!/usr/bin/env python3
 
-from os import path
+import os
 from setuptools import setup
 
-here = path.abspath(path.dirname(__file__))
+here = os.path.abspath(os.path.dirname(__file__))
+
+
+# ------------------------------------------------------------------------------
+
+def list_all_files_recursively(dirpath):
+	filepath_list = list()
+	for parent_path, _, filenames in os.walk(dirpath):
+		for filename in filenames:
+			filepath = os.path.join(parent_path, filename)
+			filepath_list.append(filepath)
+
+	return filepath_list
+
 
 # ------------------------------------------------------------------------------
 
@@ -12,11 +25,11 @@ packageName = "macrame"
 
 # Load information needed by setup
 about = {}
-with open(path.join(here, f"{packageName}/__init__.py"), 'r', encoding='utf-8') as f:
+with open(os.path.join(here, f"{packageName}/__init__.py"), 'r', encoding='utf-8') as f:
 	exec(f.read(), about)
 
 # Long description
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
 	long_description = f.read()
 
 # Requirements
@@ -43,7 +56,7 @@ setup(
 	download_url=f"https://github.com/TediCreations/{packageName}/archive/" + about['__version__'] + '.tar.gz',
 	keywords=['build', 'make', 'util'],
 	install_requires=dependencies,
-	package_data={'macrame': ['../static/*']},
+	package_data={'macrame': list_all_files_recursively('static/')},
 	include_package_data=True,
 	entry_points={
 		"console_scripts": [
