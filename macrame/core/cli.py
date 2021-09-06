@@ -2,7 +2,7 @@
 
 from .exceptions import UserInputError
 import argparse
-# import argcomplete
+# import shtab
 import os
 import sys
 
@@ -36,6 +36,8 @@ class Parser(object):
 			epilog=epilog,
 			fromfile_prefix_chars='@')
 
+		# shtab.add_argument_to(_parser, ["-s", "--print-completion"])
+
 		global _subparser
 		_subparser = _parser.add_subparsers(dest='cmd', description="")
 
@@ -66,7 +68,6 @@ class Parser(object):
 		pass
 
 	def handle(self):
-		# argcomplete.autocomplete(_parser)
 		args = _parser.parse_args()
 		subcommand = _parser.parse_args().cmd
 
@@ -163,6 +164,22 @@ class Command(object):
 		"""
 		if not os.path.isdir(directoryPath):
 			self.error(f"The directory {directoryPath} does not exist")
+
+	def addArgument(self, name):
+		"""
+		Gets the value of an argument
+
+		name: The argument name
+		"""
+
+		args = vars(_parser.parse_args())
+		rv = None
+		try:
+			rv = args[name]
+		except KeyError:
+			self.error(f"Argument '{name}' does not exist")
+
+		return rv
 
 	def getArgument(self, name):
 		"""
