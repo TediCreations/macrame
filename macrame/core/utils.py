@@ -4,6 +4,24 @@ import subprocess
 import os
 
 
+def toString(obj):
+	"""
+	Convert an object to string representation
+
+	param obj: The object to convert to string
+	"""
+	rv = ""
+	if obj is None:
+		pass
+	elif isinstance(obj, list):
+		rv = " ".join(obj)
+	elif isinstance(obj, set):
+		rv = " ".join(obj)
+	else:
+		rv = str(obj)
+	return rv
+
+
 def run_command(cmd):
 	"""
 	Run a shell command
