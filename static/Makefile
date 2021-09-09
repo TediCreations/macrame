@@ -146,13 +146,6 @@
 #endif
 #	@valgrind             $(BIN_DIR)$(HOST_DIR)$(EXEC)
 #
-#.PHONY: todo
-#todo: ##@analysis Check for programmer notes in code.
-#	@egrep                -nr -Rw --color 'bug|BUG|Bug'    $(SRC_DIR) $(INC_DIR) port/ || true
-#	@egrep                -nr -Rw --color 'todo|TODO|Todo' $(SRC_DIR) $(INC_DIR) port/ || true
-#	@egrep                -nr -Rw --color 'test|TEST|Test' $(SRC_DIR) $(INC_DIR) port/ || true
-
-
 ################################################################################
 #    Makefile & Shell
 #

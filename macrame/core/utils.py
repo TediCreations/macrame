@@ -66,11 +66,11 @@ def egrep(keywords, whole_words=False):
 	param: keywords       Keywords to search for
 	param: whole_words    Search for whole words
 	"""
-	egrep_flags = "-i -nr -R --color"
+	grep_flags = "-i -nr -R --color --no-messages"
 
 	if whole_words:
-		egrep_flags += " -w"
+		grep_flags += " -w"
 
-	cmd = f"egrep {egrep_flags} '{keywords}' src/ inc/ port/ || true"
+	cmd = f"grep -E {grep_flags} '{keywords}' src/ inc/ port/ || true"
 	rv = run_command(cmd)
 	return rv
