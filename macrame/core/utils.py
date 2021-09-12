@@ -2,6 +2,24 @@
 
 import subprocess
 import os
+import re
+
+
+def acquireCliProgramVersion(s):
+	"""
+	Acquire the version of a cli program
+
+	param s: The output of the programm version string.
+
+	example: 'gcc --version'
+	"""
+	regex = r"(\d+)(\.\d+)(\.\d+)?"
+	matches = re.finditer(regex, s, re.MULTILINE)
+	version = None
+	for matchNum, match in enumerate(matches, start=1):
+		version = match.group()
+
+	return version
 
 
 def toString(obj):
@@ -25,9 +43,29 @@ def toString(obj):
 def run_command(cmd):
 	"""
 	Run a shell command
+	The stdout is shown.
+
+	Returns the error code
 	"""
 
 	rv = subprocess.call(cmd, shell=True)
+	return rv
+
+
+def run_command2(cmd):
+	"""
+	Run a shell command
+
+	Returns the stdout
+	"""
+
+	cmdList = cmd.split(" ")
+	rv = None
+	try:
+		rv = subprocess.run(cmdList, stdout=subprocess.PIPE).stdout.decode('utf-8')
+	except FileNotFoundError:
+		pass
+
 	return rv
 
 
