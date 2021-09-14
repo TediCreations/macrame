@@ -10,6 +10,7 @@ from .commands import BuildCommand
 from .commands import RunCommand
 from .commands import CleanCommand
 from .commands import InfoCommand
+from .commands import ToolCommand
 from .commands import TodoCommand
 from .test import TestCommand
 
@@ -32,6 +33,7 @@ class App:
 		CleanCommand("clean", "remove the generated files")
 		RunCommand("run", "executes the program")
 		InfoCommand("info", "shows project specific information")
+		ToolCommand("tool", "Checks for tools")
 		TodoCommand("todo", "Lists programmer's todo/bug/fix keywords")
 		TestCommand("test", "this is a test")
 

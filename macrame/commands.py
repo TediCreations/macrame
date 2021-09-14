@@ -7,6 +7,8 @@ Parser and build commands
 import io
 import os
 import sys
+import argparse
+import toml
 from .core.complete import complete
 from .core.cli import Parser
 from .core.cli import Command
@@ -14,6 +16,7 @@ from .core.utils import listPortNames
 from .core.utils import egrep
 from .makefile import BuildManager
 from . import __version__
+from .configuration.config import Tool
 
 
 class MyParser(Parser):
@@ -251,3 +254,43 @@ class TodoCommand(Command):
 				rv = egrep(keyword, whole_words=whole_words)
 
 		return rv
+
+
+class ToolCommand(Command):
+	"""
+	Tool Command
+	"""
+
+	def config(self):
+		"""
+		Configuration of arguments
+
+		"""
+		self.subparser.add_argument(
+			'-f',
+			'--file',
+			help='A readable file',
+			# metavar='FILE',
+			type=argparse.FileType('r'),
+			default=None)
+
+	def run(self, args):
+		"""
+		Runs the command
+		"""
+
+		if args.file is not None:
+			print(f"File: '{args.file.name}'")
+			parsed_toml = toml.load(args.file)
+
+			# print(parsed_toml)
+
+			for tool in parsed_toml['Tool']:
+				# print(tool)
+				t = Tool(tool)
+				rv = t.check()
+				print(t)
+				print(f"Result: {rv}")
+				print("")
+
+		return 0
