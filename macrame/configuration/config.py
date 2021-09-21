@@ -2,8 +2,10 @@ from ..core.version import Version
 from ..core.utils import run_command2
 from ..core.utils import acquireCliProgramVersion
 
+from abc import ABC
 
-class Config:
+
+class Config(ABC):
 
 	"""
 	Base class for all configurations

@@ -5,13 +5,13 @@ App for launching macrame
 """
 
 import sys
-from .commands import MyParser
-from .commands import BuildCommand
-from .commands import RunCommand
-from .commands import CleanCommand
-from .commands import InfoCommand
-from .commands import ToolCommand
-from .commands import TodoCommand
+from .command.parser import MyParser
+from .command.buildCommand import BuildCommand
+from .command.runCommand import RunCommand
+from .command.cleanCommand import CleanCommand
+from .command.infoCommand import InfoCommand
+from .command.toolCommand import ToolCommand
+from .command.todoCommand import TodoCommand
 from .test import TestCommand
 
 

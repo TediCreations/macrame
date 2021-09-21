@@ -5,6 +5,8 @@ Make and makefile manager
 """
 
 import os
+from abc import ABC
+from abc import abstractmethod
 from .core.exceptions import UserInputError
 from .core.utils import run_command
 from .core.utils import listPortNames
@@ -34,7 +36,28 @@ def get_abs_resourse_path(rel_resourse_path):
 	return abs_resourse_path
 
 
-class BuildManager:
+class BuildManager(ABC):
+
+	@abstractmethod
+	def build(self):
+		"""
+		Builds the project
+		"""
+
+	@abstractmethod
+	def clean(self):
+		"""
+		Cleans the project's generated files
+		"""
+
+	@abstractmethod
+	def run(self):
+		"""
+		Executes the program under development
+		"""
+
+
+class MakefileBuildManager(BuildManager):
 	"""
 	Manages the way that Make is called
 	"""
