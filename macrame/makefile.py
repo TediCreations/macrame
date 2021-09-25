@@ -25,6 +25,9 @@ def is_makefile_exist():
 
 
 class BuildManager(ABC):
+	"""
+	Abstract for managing the builds
+	"""
 
 	@abstractmethod
 	def build(self):
