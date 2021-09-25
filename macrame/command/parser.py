@@ -58,7 +58,7 @@ class MyParser(Parser):
 		shell = args.print_shell_completion_script
 		if shell:
 			filepath = os.path.dirname(os.path.abspath(__file__))
-			completion_file = os.path.join(filepath, f"./core/completion.{shell}")
+			completion_file = os.path.join(filepath, f"../core/completion.{shell}")
 			with io.open(completion_file, 'r', encoding='utf8') as completion_script:
 
 				lines = completion_script.readlines()
