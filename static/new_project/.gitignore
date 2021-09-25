@@ -1,0 +1,27 @@
+# Executables
+*.elf
+*.bin
+*.hex
+*.exe
+
+# Generated files
+*.o
+*.lst
+*.map
+*.d
+*.Td
+
+# Auto-generated files
+version.h
+
+# Other files
+*.tmp
+
+# Folders
+.dep
+bin
+obj
+tmp
+
+# Python
+.venv/

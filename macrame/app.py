@@ -6,6 +6,7 @@ App for launching macrame
 
 import sys
 from .command.parser import MyParser
+from .command.newCommand import NewCommand
 from .command.buildCommand import BuildCommand
 from .command.runCommand import RunCommand
 from .command.cleanCommand import CleanCommand
@@ -29,6 +30,7 @@ class App:
 			"mac[rame]",
 			"Utility to build Assembly/C/C++ projects",
 			"Author: Kanelis Elias")
+		NewCommand("new", "Instantiate a new macrame project")
 		BuildCommand("build", "builds the software")
 		CleanCommand("clean", "remove the generated files")
 		RunCommand("run", "executes the program")

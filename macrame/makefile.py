@@ -10,6 +10,7 @@ from abc import abstractmethod
 from .core.exceptions import UserInputError
 from .core.utils import run_command
 from .core.utils import listPortNames
+from .resource import get_abs_resourse_path
 
 
 def is_makefile_exist():
@@ -21,19 +22,6 @@ def is_makefile_exist():
 		rv = True
 
 	return rv
-
-
-def get_abs_resourse_path(rel_resourse_path):
-	"""
-	Get the absolute path of a resourse.
-
-	Resourse is a file located in the static directory.
-	"""
-
-	resourse_py_path = os.path.dirname(os.path.abspath(__file__))
-	root_path = os.path.abspath(os.path.join(resourse_py_path, "../static"))
-	abs_resourse_path = os.path.join(root_path, rel_resourse_path)
-	return abs_resourse_path
 
 
 class BuildManager(ABC):
@@ -76,7 +64,7 @@ class MakefileBuildManager(BuildManager):
 			self.port_name = port_name
 
 		# Decide upon local or remote makefile
-		self.makefile_path = get_abs_resourse_path("Makefile")
+		self.makefile_path = get_abs_resourse_path("Makefile/Makefile")
 		if is_makefile_exist() is True and use_local_makefile is True:
 			self.makefile_path = "Makefile"
 

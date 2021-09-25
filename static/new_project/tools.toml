@@ -1,0 +1,62 @@
+[[Tool]]
+name = "make"
+arg = "--version"
+compare = "=="
+version = "4.1"
+
+[[Tool]]
+name = "gcc"
+arg = "--version"
+compare = "=="
+version = "7.5"
+
+	[[Tool.flags]]
+	description = "Enable debugging information"
+	cflags = "-g"
+
+	[[Tool.flags]]
+	description = "Optimization"
+	cflags = "-O2"
+
+[[Tool]]
+name = "arm-none-eabi-gcc"
+arg = "--version"
+compare = "=="
+version = "10.2.1"
+
+[[Tool]]
+name = "g++"
+arg = "--version"
+compare = "=="
+version = "7.5"
+
+[[Tool]]
+name = "git"
+arg = "--version"
+compare = "=="
+version = "2.17.1"
+
+[[Tool]]
+name = "ls"
+arg = "--version"
+compare = ">="
+version = "8.28"
+
+[[Tool]]
+name = "python -m macrame"
+arg = "--version"
+compare = "=="
+version = "2.1"
+
+[[Tool]]
+name = "python"
+arg = "--version"
+compare = "=="
+version = "3.6.9"
+
+
+[[Tool]]
+name = "lm4flash"
+arg = "-V"
+compare = "=="
+version = "0.1.3"

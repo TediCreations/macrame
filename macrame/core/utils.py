@@ -3,6 +3,25 @@
 import subprocess
 import os
 import re
+import shutil
+
+
+def copytree(src: str, dst: str, symlinks=False, ignore=None) -> None:
+	"""
+	Copy a file or all the contents of a directory
+
+	param: src The source file or directory
+	param: dst The source file or directory
+	param: symlinks Do you want symlinks to be copied
+	param: ignore What files to ignore
+	"""
+	for item in os.listdir(src):
+		s = os.path.join(src, item)
+		d = os.path.join(dst, item)
+		if os.path.isdir(s):
+			shutil.copytree(s, d, symlinks, ignore)
+		else:
+			shutil.copy2(s, d)
 
 
 def acquireCliProgramVersion(s):
