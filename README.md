@@ -21,6 +21,8 @@
   </p>
 </p>
 
+[![Build Status](https://app.travis-ci.com/TediCreations/macrame.svg?branch=master)](https://app.travis-ci.com/TediCreations/macrame)
+
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
