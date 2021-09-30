@@ -24,20 +24,24 @@ class MyParser(Parser):
 
 		cwd_path = os.path.abspath(os.getcwd())
 		self.parser.add_argument(
-			'-C', '--directory',
+			"-C", "--directory",
 			default=cwd_path,
-			help="changes current working directory")
+			help="changes current working directory",
+		)
 		self.parser.add_argument(
-			'-v', '--version',
-			action='store_true',
-			help="output version and exit")
+			"-v", "--version",
+			action="store_true",
+			help="output version and exit"
+		)
 		self.parser.add_argument(
-			'--complete',
-			help="Completion for shell")
+			"--complete",
+			help="Completion for shell"
+		)
 		self.parser.add_argument(
-			'--print_shell_completion_script',
+			"--print_shell_completion_script",
 			choices=["bash", "zsh"],
-			help="Prints the script to be sources for shell completion")
+			help="Prints the script to be sources for shell completion",
+		)
 
 	def run(self, args):
 		"""
@@ -59,7 +63,7 @@ class MyParser(Parser):
 		if shell:
 			filepath = os.path.dirname(os.path.abspath(__file__))
 			completion_file = os.path.join(filepath, f"../core/completion.{shell}")
-			with io.open(completion_file, 'r', encoding='utf8') as completion_script:
+			with io.open(completion_file, "r", encoding="utf8") as completion_script:
 
 				lines = completion_script.readlines()
 				for line in lines:
@@ -67,9 +71,9 @@ class MyParser(Parser):
 				completion_script.close()
 				sys.exit(0)
 		elif args.complete is not None:
-			program_names = sorted(['mac', 'macrame'], key=len, reverse=True)
+			program_names = sorted(["mac", "macrame"], key=len, reverse=True)
 
-			raw = args.complete.strip(' ')
+			raw = args.complete.strip(" ")
 			raw = raw.rstrip(" -")
 
 			for program_name in program_names:

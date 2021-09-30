@@ -20,18 +20,20 @@ class TodoCommand(Command):
 
 		# Whole words
 		self.subparser.add_argument(
-			'-w', '--whole_words',
-			action='store_true',
-			help="search only for whole words")
+			"-w", "--whole_words",
+			action="store_true",
+			help="search only for whole words",
+		)
 		# Keywords
 		self.subparser.add_argument(
-			'-k', '--keywords',
-			default=['todo', 'bug', 'fix'],
-			choices=['todo', 'bug', 'fix'],
-			action='store',
+			"-k", "--keywords",
+			default=["todo", "bug", "fix"],
+			choices=["todo", "bug", "fix"],
+			action="store",
 			type=str,
-			nargs='*',
-			help="keywords to search in the project")
+			nargs="*",
+			help="keywords to search in the project",
+		)
 
 	def run(self, args):
 		"""

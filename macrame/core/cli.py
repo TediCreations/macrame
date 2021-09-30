@@ -34,12 +34,13 @@ class Parser(object):
 			prog=name,
 			description=description,
 			epilog=epilog,
-			fromfile_prefix_chars='@')
+			fromfile_prefix_chars="@"
+		)
 
 		# shtab.add_argument_to(_parser, ["-s", "--print-completion"])
 
 		global _subparser
-		_subparser = _parser.add_subparsers(dest='cmd', description="")
+		_subparser = _parser.add_subparsers(dest="cmd", description="")
 
 		self.parser = _parser
 		self.config()
@@ -61,9 +62,10 @@ class Parser(object):
 		Example
 
 		self.parser.add_argument(
-			'-v', '--version',
-			action='store_true',
-			help="get the version of the system")
+			"-v", "--version",
+			action="store_true",
+			help="get the version of the system"
+		)
 		"""
 		pass
 
@@ -78,8 +80,8 @@ class Parser(object):
 		rv = 0
 		global _commandList
 		for command in _commandList:
-			cmd_name = command['name']
-			cmd_callback = command['callback']
+			cmd_name = command["name"]
+			cmd_callback = command["callback"]
 			if cmd_name == subcommand:
 				try:
 					rv = cmd_callback(args)
@@ -113,11 +115,12 @@ class Command(object):
 		global _subparser
 		self.subparser = _subparser.add_parser(
 			self.name,
-			help=help)
+			help=help
+		)
 
 		d = dict()
-		d['name'] = self.name
-		d['callback'] = self.run
+		d["name"] = self.name
+		d["callback"] = self.run
 
 		global _commandList
 		_commandList.append(d)

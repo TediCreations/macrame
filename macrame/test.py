@@ -21,12 +21,13 @@ class TestCommand(Command):
 
 		"""
 		self.subparser.add_argument(
-			'-f',
-			'--file',
-			help='A readable file',
+			"-f",
+			"--file",
+			help="A readable file",
 			# metavar='FILE',
-			type=argparse.FileType('r'),
-			default=None)
+			type=argparse.FileType("r"),
+			default=None,
+		)
 
 	def run(self, args):
 		"""

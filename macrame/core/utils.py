@@ -81,7 +81,7 @@ def run_command2(cmd):
 	cmdList = cmd.split(" ")
 	rv = None
 	try:
-		rv = subprocess.run(cmdList, stdout=subprocess.PIPE).stdout.decode('utf-8')
+		rv = subprocess.run(cmdList, stdout=subprocess.PIPE).stdout.decode("utf-8")
 	except FileNotFoundError:
 		pass
 

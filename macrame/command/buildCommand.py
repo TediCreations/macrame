@@ -22,18 +22,20 @@ class BuildCommand(Command):
 
 		# Local or remote makefile
 		self.subparser.add_argument(
-			'-r', '--force_remote',
+			"-r", "--force_remote",
 			default=False,
-			action='store_true',
-			help="use the tools internal build system config files")
+			action="store_true",
+			help="use the tools internal build system config files",
+		)
 
 		# Port name
 		self.subparser.add_argument(
-			'-p', '--port',
+			"-p", "--port",
 			default="",
 			choices=listPortNames(),
 			type=str,
-			help="the port name.")
+			help="the port name.",
+		)
 
 	def run(self, args):
 		"""

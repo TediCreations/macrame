@@ -1,4 +1,4 @@
-class Version():
+class Version:
 
 	major = None
 	minor = None
@@ -133,11 +133,11 @@ class Version():
 		elif string_with_version == "":
 			raise Exception("Invalid version")
 
-		if string_with_version[-1] == '.':
+		if string_with_version[-1] == ".":
 			raise Exception("Invalid version")
 
 		# Since the version is a string we now try to parse it
-		versionList = string_with_version.split('.', 3)
+		versionList = string_with_version.split(".", 3)
 
 		def integer_None_or_zero(v):
 			rv = 0

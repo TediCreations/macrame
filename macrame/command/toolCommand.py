@@ -18,15 +18,14 @@ class ToolCommand(Command):
 	def config(self):
 		"""
 		Configuration of arguments
-
 		"""
 		self.subparser.add_argument(
-			'-f',
-			'--file',
-			help='A readable file',
+			"-f", "--file",
+			help="A readable file",
 			# metavar='FILE',
-			type=argparse.FileType('r'),
-			default=None)
+			type=argparse.FileType("r"),
+			default=None,
+		)
 
 	def run(self, args):
 		"""
@@ -39,7 +38,7 @@ class ToolCommand(Command):
 
 			# print(parsed_toml)
 
-			for tool in parsed_toml['Tool']:
+			for tool in parsed_toml["Tool"]:
 				# print(tool)
 				t = Tool(tool)
 				rv = t.check()
