@@ -4,9 +4,10 @@
 Build command
 """
 
+import os
 from ..core.cli import Command
 from ..core.utils import listPortNames
-from ..makefile import MakefileBuildManager
+from ..buildsystem.factory import BuildFactory
 
 
 class BuildCommand(Command):
@@ -38,10 +39,9 @@ class BuildCommand(Command):
 		"""
 		Runs the command
 		"""
-		build_manager = MakefileBuildManager(
-			port_name=args.port,
-			use_local_makefile=not args.force_remote
-		)
-		rv = build_manager.build()
+		project_path = os.path.abspath(args.directory)
+
+		build_factory = BuildFactory(project_path, args.port, args.force_remote)
+		rv = build_factory.get_manager().build()
 
 		return rv

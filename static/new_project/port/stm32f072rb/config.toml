@@ -1,0 +1,157 @@
+# ------------------------------------------------------------------------------
+# Toolchain
+
+[[Environment]]
+name = "AS"
+value = "${CCACHE} arm-none-eabi-gcc -x assembler-with-cpp"
+description = "Assembler tool that supports cache"
+
+[[Environment]]
+name = "CC"
+value = "${CCACHE} arm-none-eabi-gcc"
+description = "C compiler tool that supports cache"
+
+[[Environment]]
+name = "CXX"
+value = "${CCACHE} arm-none-eabi-g++"
+description = "C++ compiler tool that supports cache"
+
+[[Environment]]
+name = "LD"
+value = "arm-none-eabi-gcc"
+description = "Linker tool"
+
+[[Environment]]
+name = "SZ"
+value = "arm-none-eabi-size"
+description = "Tool to measure binary file sizes"
+
+[[Environment]]
+name = "OC"
+value = "arm-none-eabi-objcopy"
+description = "Tool to copy and translate object files"
+
+[[Environment]]
+name = "NM"
+value = "arm-none-eabi-nm"
+description = "Tool to list symbols from object files"
+
+# ------------------------------------------------------------------------------
+# Makefile
+
+[[Environment]]
+name = "RUN_CMD"
+value = 'uart -d "/dev/ttyACM0" -s "115200"'
+description = "Command to run and connect with the board via serial interface"
+
+[[Environment]]
+name = "SIZE_CMD"
+value = '${BUILDSYSTEM_DIRPATH}/scripts/get_fw_size "$<" 0x20000 0x4000 > "$@"'
+description = "Command to measure the size of the elf"
+
+# ------------------------------------------------------------------------------
+# Linker script
+
+[[Environment]]
+name = "LDFLAGS"
+value = "-Tport/${PORT_NAME}/STM32F072RBTx_FLASH.ld"
+description = "Linker script"
+type = "append"
+
+# ------------------------------------------------------------------------------
+# C standard library
+
+[[Environment]]
+name = "LDFLAGS"
+value = "-lc"
+description = "C standard library"
+type = "append"
+
+[[Environment]]
+name = "LDFLAGS"
+value = "-lm"
+description = "C standard math library"
+type = "append"
+
+# ------------------------------------------------------------------------------
+# ARCH
+
+[[Environment]]
+name = "CPPFLAGS"
+value = "-mcpu=cortex-m0"
+description = "Microcontroller arch"
+type = "append"
+
+[[Environment]]
+name = "CPPFLAGS"
+value = "-mthumb"
+description = "Thumb mode"
+type = "append"
+
+# ------------------------------------------------------------------------------
+# TODO
+
+[[Environment]]
+name = "CPPFLAGS"
+value = "-fdata-sections"
+description = "Data sections"
+type = "append"
+
+[[Environment]]
+name = "CPPFLAGS"
+value = "-ffunction-sections"
+description = "Function sections"
+type = "append"
+
+#LDFLAGS += -Wl,-u
+#LDFLAGS += -Wl,_printf_float
+
+[[Environment]]
+name = "LDFLAGS"
+value = "-u _printf_float"
+description = "Print floats with printf"
+type = "append"
+
+[[Environment]]
+name = "LDFLAGS"
+value = "-u _scanf_float"
+description = "Read floats with scanf"
+type = "append"
+
+#LDFLAGS += -ffreestanding
+#LDFLAGS +=-nostdlib
+
+[[Environment]]
+name = "LDFLAGS"
+value = "-specs=nosys.specs"
+description = "????"
+type = "append"
+
+#LDFLAGS+=-specs=nano.specs
+
+#LDFLAGS+=-lnosys
+#LDFLAGS+=-lrdimon
+
+# ------------------------------------------------------------------------------
+# Thirdparty
+
+# ------------------------------------------------------------------------------
+# CMSIS
+
+[[Environment]]
+name = "CPPFLAGS"
+value = "-DSTM32F072xB"
+description = "Define the microcontroller"
+type = "append"
+
+[[Environment]]
+name = "CPPFLAGS"
+value = "-Ithirdparty/CMSIS/Device/ST/STM32F0xx/Include/"
+description = "CMSIS Path"
+type = "append"
+
+[[Environment]]
+name = "CPPFLAGS"
+value = "-Ithirdparty/CMSIS/Include/"
+description = "CMSIS Path"
+type = "append"

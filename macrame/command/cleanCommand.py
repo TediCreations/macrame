@@ -4,8 +4,9 @@
 Clean command
 """
 
+import os
 from ..core.cli import Command
-from ..makefile import MakefileBuildManager
+from ..buildsystem.factory import BuildFactory
 
 
 class CleanCommand(Command):
@@ -20,16 +21,19 @@ class CleanCommand(Command):
 
 		# Local or remote makefile
 		self.subparser.add_argument(
-			'-r', '--force_remote',
+			"-r", "--force_remote",
 			default=False,
-			action='store_true',
-			help="use the tools internal build system config files")
+			action="store_true",
+			help="use the tools internal build system config files",
+		)
 
 	def run(self, args):
 		"""
 		Runs the command
 		"""
-		build_manager = MakefileBuildManager(use_local_makefile=not args.force_remote)
-		rv = build_manager.clean()
+		project_path = os.path.abspath(args.directory)
+
+		build_factory = BuildFactory(project_path, None, args.force_remote)
+		rv = build_factory.get_manager().clean()
 
 		return rv

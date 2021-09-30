@@ -195,13 +195,31 @@ BUILDSYSTEM_DIRPATH := $(dir $(MAKEFILE_FILEPATH))
 
 TESTSMK_FILEPATH := $(BUILDSYSTEM_DIRPATH)tests.mk
 
-COMPILERMK_FILEPATH := $(BUILDSYSTEM_DIRPATH)compiler.mk
 
+# TODO: Check the following env variables are declared
+# $(info AS:       $(AS))
+# $(info CC:       $(CC))
+# $(info CXX:      $(CXX))
+# $(info LD:       $(LD))
+# $(info SZ:       $(SZ))
+# $(info OC:       $(OC))
+# $(info NM:       $(NM))
+
+# $(info ASFLAGS   $(ASFLAGS))
+# $(info CFLAGS    $(CFLAGS))
+# $(info CXXFLAGS  $(CXXFLAGS))
+# $(info CPPFLAGS  $(CPPFLAGS))
+# $(info LDFLAGS   $(LDFLAGS))
+
+# $(error "Exiting")
 
 #.................................................
 #    Project's name
 
-PROJ_NAME   := $(shell basename $(PWD))
+PROJ_NAME   ?= $(shell basename $(PWD))
+# $(info PROJ_NAME   $(PROJ_NAME))
+# $(info RUN_CMD     ${RUN_CMD})
+# $(info PORT_NAME   ${PORT_NAME})
 
 #.................................................
 #    Host's OS
@@ -266,19 +284,19 @@ CAT      := cat
 #    Default toolchain
 #
 
-AS  = gcc -x assembler-with-cpp
-CC  = gcc
-CXX = g++
-LD  = gcc
-SZ  = size
-OC  = objcopy
-NM  = nm
+# AS  = gcc -x assembler-with-cpp
+# CC  = gcc
+# CXX = g++
+# LD  = gcc
+# SZ  = size
+# OC  = objcopy
+# NM  = nm
 
-CPPFLAGS =
-ASFLAGS  =
-CFLAGS   =
-CXXFLAGS =
-LDFLAGS  =
+CPPFLAGS ?=
+ASFLAGS  ?=
+CFLAGS   ?=
+CXXFLAGS ?=
+LDFLAGS  ?=
 
 ################################################################################
 #    Colors
@@ -335,30 +353,36 @@ endif
 #.................................................
 #    Auxiliary files that build depends on
 
-AUX = $(MAKEFILE_FILEPATH) $(COMPILERMK_FILEPATH)
+AUX = $(MAKEFILE_FILEPATH)
 
-ifdef PORT_NAME
-  ifneq (,$(wildcard port/$(PORT_NAME)/Makefile))
-    AUX += port/$(PORT_NAME)/Makefile
-  endif
-endif
+#ifdef PORT_NAME
+#  ifneq (,$(wildcard port/$(PORT_NAME)/Makefile))
+#    AUX += port/$(PORT_NAME)/Makefile
+#  endif
+#endif
 
 #.................................................
 #    Source
 
-AS_SRCs  += $(shell find "src/" -name "*.[s|S]")
-C_SRCs   += $(shell find "src/" -name "*.[c|C]")
-CXX_SRCs += $(shell find "src/" -name "*.cpp")
+#AS_SRCs  += $(shell find "src/" -name "*.[s|S]")
+#C_SRCs   += $(shell find "src/" -name "*.[c|C]")
+#CXX_SRCs += $(shell find "src/" -name "*.cpp")
 
-ifdef PORT_NAME
-  AS_SRCs  += $(shell find "port/$(PORT_NAME)/" -name "*.[s|S]")
-  C_SRCs   += $(shell find "port/$(PORT_NAME)/" -name "*.[c|C]")
-  CXX_SRCs += $(shell find "port/$(PORT_NAME)/" -name "*.cpp")
-endif
+#ifdef PORT_NAME
+#  AS_SRCs  += $(shell find "port/$(PORT_NAME)/" -name "*.[s|S]")
+#  C_SRCs   += $(shell find "port/$(PORT_NAME)/" -name "*.[c|C]")
+#  CXX_SRCs += $(shell find "port/$(PORT_NAME)/" -name "*.cpp")
+#endif
 
-AS_SRCs  := $(sort $(AS_SRCs))
-C_SRCs   := $(sort $(C_SRCs))
-CXX_SRCs := $(sort $(CXX_SRCs))
+#AS_SRCs  := $(sort $(AS_SRCs))
+#C_SRCs   := $(sort $(C_SRCs))
+#CXX_SRCs := $(sort $(CXX_SRCs))
+
+# $(info AS_SRCs     $(AS_SRCs))
+# $(info C_SRCs      $(C_SRCs))
+# $(info CXX_SRCs    $(CXX_SRCs))
+
+# $(error "Exiting")
 
 #.................................................
 #    Output dir
@@ -367,43 +391,40 @@ ifdef PORT_NAME
 
 ifdef TARGET
     BIN_OUTDIR  := bin/$(PORT_NAME)/$(TARGET)/
-    OBJ_OUTDIR  := tmp/$(PORT_NAME)/$(TARGET)/obj/
-    TEST_OUTDIR := tmp/$(PORT_NAME)/$(TARGET)/test/
+    OBJ_OUTDIR  := gen/$(PORT_NAME)/$(TARGET)/obj/
+    TEST_OUTDIR := gen/$(PORT_NAME)/$(TARGET)/test/
   else
     BIN_OUTDIR  := bin/$(PORT_NAME)/
-    OBJ_OUTDIR  := tmp/$(PORT_NAME)/obj/
-    TEST_OUTDIR := tmp/$(PORT_NAME)/test/
+    OBJ_OUTDIR  := gen/$(PORT_NAME)/obj/
+    TEST_OUTDIR := gen/$(PORT_NAME)/test/
   endif
 else
   BIN_OUTDIR    := bin/
-  OBJ_OUTDIR    := tmp/obj/
-  TEST_OUTDIR   := tmp/test/
+  OBJ_OUTDIR    := gen/obj/
+  TEST_OUTDIR   := gen/test/
 endif
 
 OBJS=  $(sort $(AS_SRCs:%.s=$(OBJ_OUTDIR)%.o))
 OBJS+= $(sort $(C_SRCs:%.c=$(OBJ_OUTDIR)%.o))
 OBJS+= $(sort $(CXX_SRCs:%.cpp=$(OBJ_OUTDIR)%.o))
 
-
 #.................................................
 #    Includes
 
-CPPFLAGS+=-Iinc/
-CPPFLAGS+=-Isrc/
+# CPPFLAGS+=-Iinc/
+# CPPFLAGS+=-Isrc/
 
-ifdef PORT_NAME
-  CPPFLAGS+=-Iport/
-endif
+# ifdef PORT_NAME
+#  CPPFLAGS+=-Iport/
+# endif
 
 ################################################################################
 #    Compiler
 #
 
--include $(COMPILERMK_FILEPATH)
-
-ifdef PORT_NAME
-  -include port/$(PORT_NAME)/Makefile
-endif
+#ifdef PORT_NAME
+#  -include port/$(PORT_NAME)/Makefile
+#endif
 
 COMPILE.AS  ?= $(AS)  -c $< -o $@ $(CPPFLAGS) $(ASFLAGS)
 COMPILE.CC  ?= $(CC)  -c $< -o $@ $(CPPFLAGS) $(CFLAGS)
@@ -430,15 +451,16 @@ RUN_GTAGS =
 #	@$(GTAGS) -c --gtagslabel=new-ctags -i --single-update $< $(OBJ_OUTDIR)tags
 #endef
 
+
+# Default comand to run the executable
+RUN_CMD ?= ./$(BIN_OUTDIR)$(PROJ_NAME).elf
+
+# Default size command"
+SIZE_CMD ?= "$(SZ)" "$<" > "$@"
+
 define runApp
-  ./$(BIN_OUTDIR)$(PROJ_NAME).elf
+  $(RUN_CMD)
 endef
-
-# Function to calculate the size of the elf
-define sizeElf
-  @$(SZ) "$(1)" > "$(2)"
-endef
-
 
 ################################################################################
 #    Rules
@@ -496,7 +518,7 @@ clean:
 	@$(RM_RF) GRTAGS
 	py3clean .
 	@$(RM_RF) bin
-	@$(RM_RF) tmp
+	@$(RM_RF) gen
 	@$(ECHO) "Cleaned project"
 
 .PHONY: info
@@ -615,7 +637,7 @@ $(BIN_OUTDIR)$(PROJ_NAME).elf: $(OBJS)
 # Size
 %.size: %.elf
 	$(call notify,"SZ  ","$@")
-	$(call sizeElf,"$<","$@")
+	$(SIZE_CMD)
 	@$(ECHO_E) $(GREEN)"OK"$(RESET)
 
 

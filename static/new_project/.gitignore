@@ -20,8 +20,7 @@ version.h
 # Folders
 .dep
 bin
-obj
-tmp
+gen
 
 # Python
 .venv/
