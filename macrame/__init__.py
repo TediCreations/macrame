@@ -8,7 +8,7 @@ import sys
 
 try:
 	from pkg_resources import get_distribution, DistributionNotFound
-except Exception as e:
+except DistributionNotFound as e:
 	print(e)
 	sys.exit(1)
 

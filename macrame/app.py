@@ -16,7 +16,7 @@ from .command.todoCommand import TodoCommand
 from .test import TestCommand
 
 
-class App:
+class App:  # pylint: disable=too-few-public-methods
 	"""
 	Macrame application
 	"""
@@ -29,7 +29,8 @@ class App:
 		self.parser = MyParser(
 			"mac[rame]",
 			"Utility to build Assembly/C/C++ projects",
-			"Author: Kanelis Elias")
+			"Author: Kanelis Elias"
+		)
 		NewCommand("new", "Instantiate a new macrame project")
 		BuildCommand("build", "builds the software")
 		CleanCommand("clean", "remove the generated files")
@@ -56,5 +57,5 @@ def app_run():
 	sys.exit(rv)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	app_run()
