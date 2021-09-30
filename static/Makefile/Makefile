@@ -508,8 +508,9 @@ build: check\
        $(BIN_OUTDIR)$(PROJ_NAME).hex\
        $(BIN_OUTDIR)$(PROJ_NAME).sym\
        $(BIN_OUTDIR)$(PROJ_NAME).size\
-       runTests\
        size
+#       runTests\
+
 
 .PHONY: clean
 clean:
