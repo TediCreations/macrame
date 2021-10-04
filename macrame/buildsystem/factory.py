@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 
-"""
-???
-"""
+"""Build System Factory."""
 
 from ..core.exceptions import UserInputError
 from .makefile import MakefileBuildManager
 
 
 class BuildFactory:
-	"""
-	Manages the way that the build system is called
-	"""
+	"""Factory that creates the build system automatically."""
 
-	def __init__(self, project_path, port_name, force_remote):
+	def __init__(self, project_path, port_name, force_remote) -> None:
 		"""
-		Initialization
+		Initialization.
+
+		param: project_path The root directory of the project.
+		param: port_name The name of the port.
+		param: force_remote True to select static makefile. False to select local makefile.
 		"""
 
 		self.build_manager = None
