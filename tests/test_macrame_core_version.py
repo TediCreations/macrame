@@ -39,6 +39,8 @@ greater_versionStrings = [
 
 class TestClass:
 
+	"""Test cases for core Version"""
+
 	def test_valid_versions(self):
 
 		valid_versionStrings = [
@@ -133,101 +135,101 @@ class TestClass:
 			["1.2.3.post13.dev1+g946b55b.d20210910", [1, 2, 3]]
 		]
 
-		for d in equal_versionStrings:
-			s = d[0]
-			major = d[1][0]
-			minor = d[1][1]
-			patch = d[1][2]
+		for element in equal_versionStrings:
+			s = element[0]
+			major = element[1][0]
+			minor = element[1][1]
+			patch = element[1][2]
 
-			v = Version(s)
+			version = Version(s)
 
-			print(f"Comparing: '{d}'")
-			assert v.major == major
-			assert v.minor == minor
-			assert v.patch == patch
+			print(f"Comparing: '{element}'")
+			assert version.major == major
+			assert version.minor == minor
+			assert version.patch == patch
 
 	def test_equal_versions(self):
 
-		for d in equal_versionStrings:
-			s1 = d[0]
-			s2 = d[1]
-			v1 = Version(s1)
-			v2 = Version(s2)
+		for element in equal_versionStrings:
+			s_1 = element[0]
+			s_2 = element[1]
+			v_1 = Version(s_1)
+			v_2 = Version(s_2)
 
-			print(f"Comparing: '{d}'\t| '{v1}' == '{v2}'")
-			assert v1 == v2
+			print(f"Comparing: '{element}'\t| '{v_1}' == '{v_2}'")
+			assert v_1 == v_2
 
 	def test_not_equal_versions(self):
 
 		# We use greater as the sets are also not equal
-		for d in greater_versionStrings:
-			s1 = d[0]
-			s2 = d[1]
-			v1 = Version(s1)
-			v2 = Version(s2)
+		for element in greater_versionStrings:
+			s_1 = element[0]
+			s_2 = element[1]
+			v_1 = Version(s_1)
+			v_2 = Version(s_2)
 
-			print(f"Comparing: '{d}'\t| '{v1}' != '{v2}'")
-			assert v1 != v2
+			print(f"Comparing: '{element}'\t| '{v_1}' != '{v_2}'")
+			assert v_1 != v_2
 
 	def test_greater_version(self):
 
-		for d in greater_versionStrings:
-			s1 = d[0]
-			s2 = d[1]
-			v1 = Version(s1)
-			v2 = Version(s2)
+		for element in greater_versionStrings:
+			s_1 = element[0]
+			s_2 = element[1]
+			v_1 = Version(s_1)
+			v_2 = Version(s_2)
 
-			print(f"Comparing: '{d}'\t| '{v1}' > '{v2}'")
-			assert v1 > v2
+			print(f"Comparing: '{element}'\t| '{v_1}' > '{v_2}'")
+			assert v_1 > v_2
 
 	def test_less_version(self):
 
 		# We use greater and compare with the opposing sets
-		for d in greater_versionStrings:
-			s1 = d[1]  # Here
-			s2 = d[0]  # And here
-			v1 = Version(s1)
-			v2 = Version(s2)
+		for element in greater_versionStrings:
+			s_1 = element[1]  # Here
+			s_2 = element[0]  # And here
+			v_1 = Version(s_1)
+			v_2 = Version(s_2)
 
-			print(f"Comparing: '{d}'\t| '{v1}' < '{v2}'")
-			assert v1 < v2
+			print(f"Comparing: '{element}'\t| '{v_1}' < '{v_2}'")
+			assert v_1 < v_2
 
 	def test_less_equal_version(self):
 
-		for d in equal_versionStrings:
-			s1 = d[0]
-			s2 = d[1]
-			v1 = Version(s1)
-			v2 = Version(s2)
+		for element in equal_versionStrings:
+			s_1 = element[0]
+			s_2 = element[1]
+			v_1 = Version(s_1)
+			v_2 = Version(s_2)
 
-			print(f"Comparing: '{d}'\t| '{v1}' <= '{v2}'")
-			assert v1 <= v2
+			print(f"Comparing: '{element}'\t| '{v_1}' <= '{v_2}'")
+			assert v_1 <= v_2
 
-		for d in greater_versionStrings:
-			s1 = d[1]
-			s2 = d[0]
-			v1 = Version(s1)
-			v2 = Version(s2)
+		for element in greater_versionStrings:
+			s_1 = element[1]
+			s_2 = element[0]
+			v_1 = Version(s_1)
+			v_2 = Version(s_2)
 
-			print(f"Comparing: '{d}'\t| '{v1}' <= '{v2}'")
-			assert v1 <= v2
+			print(f"Comparing: '{element}'\t| '{v_1}' <= '{v_2}'")
+			assert v_1 <= v_2
 
 	def test_greater_equal_version(self):
 
-		for d in equal_versionStrings:
-			s1 = d[0]
-			s2 = d[1]
-			v1 = Version(s1)
-			v2 = Version(s2)
+		for element in equal_versionStrings:
+			s_1 = element[0]
+			s_2 = element[1]
+			v_1 = Version(s_1)
+			v_2 = Version(s_2)
 
-			print(f"Comparing: '{d}'\t| '{v1}' >= '{v2}'")
-			assert v1 >= v2
+			print(f"Comparing: '{element}'\t| '{v_1}' >= '{v_2}'")
+			assert v_1 >= v_2
 
-		for d in greater_versionStrings:
-			s1 = d[0]
-			s2 = d[1]
-			v1 = Version(s1)
-			v2 = Version(s2)
+		for element in greater_versionStrings:
+			s_1 = element[0]
+			s_2 = element[1]
+			v_1 = Version(s_1)
+			v_2 = Version(s_2)
 
-			print(f"Comparing: '{d}'\t| '{v1}' >= '{v2}'")
-			assert v1 >= v2
+			print(f"Comparing: '{element}'\t| '{v_1}' >= '{v_2}'")
+			assert v_1 >= v_2
