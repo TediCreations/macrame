@@ -3,6 +3,7 @@
 import subprocess
 import os
 import re
+import ast
 import shutil
 
 
@@ -131,3 +132,24 @@ def egrep(keywords, whole_words=False):
 	cmd = f"grep -E {grep_flags} '{keywords}' src/ inc/ port/ || true"
 	rv = run_command(cmd)
 	return rv
+
+def typify_string(string: str):
+	"""
+	Try to convert a string of builtin python type
+
+	param: string The string to be converted.
+
+	e.g:
+	- 'None' -> None
+	- '123' -> 123
+	- '3.14' -> 3.14
+	- 'string' -> 'string'
+	"""
+
+	result_string = None
+	try:
+		result_string = ast.literal_eval(string)
+	except (SyntaxError, ValueError):
+		result_string = string
+
+	return result_string

@@ -65,13 +65,13 @@ type = "append"
 name = "LDFLAGS"
 value = "-lc"
 description = "C standard library"
-type = "append"
+method = "append"
 
 [[Environment]]
 name = "LDFLAGS"
 value = "-lm"
 description = "C standard math library"
-type = "append"
+method = "append"
 
 # ------------------------------------------------------------------------------
 # ARCH
@@ -80,13 +80,13 @@ type = "append"
 name = "CPPFLAGS"
 value = "-mcpu=cortex-m0"
 description = "Microcontroller arch"
-type = "append"
+method = "append"
 
 [[Environment]]
 name = "CPPFLAGS"
 value = "-mthumb"
 description = "Thumb mode"
-type = "append"
+method = "append"
 
 # ------------------------------------------------------------------------------
 # TODO
@@ -95,13 +95,13 @@ type = "append"
 name = "CPPFLAGS"
 value = "-fdata-sections"
 description = "Data sections"
-type = "append"
+method = "append"
 
 [[Environment]]
 name = "CPPFLAGS"
 value = "-ffunction-sections"
 description = "Function sections"
-type = "append"
+method = "append"
 
 #LDFLAGS += -Wl,-u
 #LDFLAGS += -Wl,_printf_float
@@ -110,13 +110,13 @@ type = "append"
 name = "LDFLAGS"
 value = "-u _printf_float"
 description = "Print floats with printf"
-type = "append"
+method = "append"
 
 [[Environment]]
 name = "LDFLAGS"
 value = "-u _scanf_float"
 description = "Read floats with scanf"
-type = "append"
+method = "append"
 
 #LDFLAGS += -ffreestanding
 #LDFLAGS +=-nostdlib
@@ -125,7 +125,7 @@ type = "append"
 name = "LDFLAGS"
 value = "-specs=nosys.specs"
 description = "????"
-type = "append"
+method = "append"
 
 #LDFLAGS+=-specs=nano.specs
 
@@ -142,16 +142,16 @@ type = "append"
 name = "CPPFLAGS"
 value = "-DSTM32F072xB"
 description = "Define the microcontroller"
-type = "append"
+method = "append"
 
 [[Environment]]
 name = "CPPFLAGS"
 value = "-Ithirdparty/CMSIS/Device/ST/STM32F0xx/Include/"
 description = "CMSIS Path"
-type = "append"
+method = "append"
 
 [[Environment]]
 name = "CPPFLAGS"
 value = "-Ithirdparty/CMSIS/Include/"
 description = "CMSIS Path"
-type = "append"
+method = "append"

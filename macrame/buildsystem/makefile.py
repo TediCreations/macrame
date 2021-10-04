@@ -6,10 +6,13 @@ Make and makefile manager
 
 import os
 import toml
-from .manager import BuildManager
+from .adt import ConfigLoader
+from .adt import ConfigProcessor
+from .adt import BuildManager
 from ..core.utils import run_command
 from ..core.utils import listPortNames
 from ..resource import get_abs_resourse_path
+from ..configuration.config import Tool
 from ..configuration.config import Environment
 
 
@@ -24,12 +27,133 @@ def is_makefile_exist():
 	return rv
 
 
+class MakefileConfigLoader(ConfigLoader):
+
+	"""Loader for the config of Makefile based builds"""
+
+	def __init__(self, project_path: str, port_name) -> None:
+		"""
+		Constructor for the makefile loader
+
+		params: project_path: The absolute directory to the project path
+		params: port_name: The port name or None
+		"""
+		self.project_path = project_path
+		self.port_name = port_name
+
+		self.configList = list()
+
+		# Load the config
+		self._load()
+
+	def _load(self) -> None:
+		"""Loads the config"""
+
+		# Load config
+		# 1st (mandatory/default)
+		dir_path = os.path.dirname(os.path.realpath(__file__))
+		file_path = os.path.join(dir_path, "default.toml")
+		system_config = toml.load(file_path)
+		self.configList.append(system_config)
+
+		# Root config
+		# 2nd (optional)
+		# TODO: Add feature 'root config' to loader
+		root_config = None
+		if root_config is not None:
+			self.configList.append(root_config)
+
+		# Load port environment variables
+		# 3nd (optional)
+		port_config = None
+		if self.port_name is not None:
+			dir_path = os.path.join(self.project_path, "port", self.port_name)
+			file_path = os.path.join(dir_path, "config.toml")
+
+			if os.path.isfile(file_path):
+				port_config = toml.load(file_path)
+				self.configList.append(port_config)
+
+		return self.configList
+
+	def get(self) -> list:
+		"""Get the list of configs"""
+
+		return self.configList
+
+
+class MakefileConfigProcessor(ConfigProcessor):
+	"""Processor for the config of Makefile based builds"""
+
+	def __init__(self, configLoader) -> None:
+
+		# List of supported config types
+		configTypeList = [Tool, Environment]
+
+		# Turn config list into a dictionary
+		self.configTypeDict = dict()
+		for configType in configTypeList:
+			configTypeName = configType.__name__
+			self.configTypeDict[configTypeName] = configType
+
+		# Appent partial config to global config
+		self.config = dict()
+		configList = configLoader.get()
+		for config in configList:
+			self._append_to_config(config)
+
+	def _append_to_config(self, partial_config: dict):
+		"""
+		Appent partial config to global config
+
+		param: partial_config Partial config to be appented
+		"""
+
+		if partial_config is None:
+			return
+
+		for configName in partial_config:
+			config_list = partial_config[configName]
+			for config_element in config_list:
+
+				# Convert the dict to a valid configuration
+				config_obj = self.configTypeDict[configName](config_element)
+
+				# Create dict if it does not exist
+				if configName not in self.config:
+					self.config[configName] = dict()
+				configType = self.config[configName]
+
+				# Combine
+				if config_obj.getLabel() not in configType:
+					configType[config_obj.getLabel()] = config_obj
+				else:
+					configType[config_obj.getLabel()] = configType[config_obj.getLabel()] + config_obj
+
+	def __str__(self):
+
+		txt = ""
+		for key, value in self.config.items():
+			config_category_name = key
+			configCategory = value
+			for key, value in configCategory.items():
+				txt += f"[{config_category_name}][{key}]\n"
+
+		return txt
+
+	def handle(self) -> None:
+		"""Applies the config"""
+		for key in self.config["Environment"]:
+			env_var = self.config["Environment"][key]
+			env_var.doit()
+
+
 class MakefileBuildManager(BuildManager):
 	"""
 	Manages the way that Make is called
 	"""
 
-	def __init__(self, project_path, port_name=None, use_local_makefile=True):
+	def __init__(self, project_path, port_name=None, use_local_makefile=True) -> None:
 		"""
 		Initialization
 
@@ -59,13 +183,20 @@ class MakefileBuildManager(BuildManager):
 			# So we assign the first port
 			self.port_name = self.ports[0]
 
-		self._set_env_variables(makefile_dirpath, project_path)
+		# Load the config
+		configLoader = MakefileConfigLoader(project_path, port_name)
 
-	def _set_env_variables(self, makefile_dirpath, project_path):
+		# Process the config
+		configProcessor = MakefileConfigProcessor(configLoader)
+
+		self._set_env_variables(configProcessor, configProcessor.config, makefile_dirpath, project_path)
+
+	def _set_env_variables(self, configProcessor: ConfigProcessor, config: dict, makefile_dirpath, project_path) -> None:
 		"""
 		Set the environment variables
 
-		param: makefile_dirpath The path of the direcoty that Makefile is located
+		param: configProcessor The configuration processor
+		param: makefile_dirpath The path of the directory that Makefile is located
 		param: project_path The path of the project to be build
 		"""
 
@@ -105,28 +236,8 @@ class MakefileBuildManager(BuildManager):
 
 		os.environ["BUILDSYSTEM_DIRPATH"] = makefile_dirpath
 
-		# Load global environment variables
-		dir_path = os.path.dirname(os.path.realpath(__file__))
-		file_path = os.path.join(dir_path, "env.toml")
-		parsed_toml = toml.load(file_path)
-
 		# Set environment variables
-		for env_var in parsed_toml["Environment"]:
-			e = Environment(env_var)
-			e.register()
-
-		# Load port environment variables
-		if self.port_name is not None:
-			dir_path = os.path.join(project_path, "port", self.port_name)
-			file_path = os.path.join(dir_path, "config.toml")
-
-			if os.path.isfile(file_path):
-				parsed_toml = toml.load(file_path)
-
-				# Set environment variables
-				for env_var in parsed_toml["Environment"]:
-					e = Environment(env_var)
-					e.register()
+		configProcessor.handle()
 
 		# Find all files
 		as_srcs_list = list()
@@ -188,7 +299,7 @@ class MakefileBuildManager(BuildManager):
 	@staticmethod
 	def is_project_usable(project_path) -> bool:
 		"""
-		Checks is the project meets the standards
+		Checks if the project meets the standards
 		to use this build manager
 		"""
 		rv = False

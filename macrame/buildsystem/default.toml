@@ -77,45 +77,45 @@ description = "Default tool to list symbols from object files"
 name = "CPPFLAGS"
 value = "-w -Werror -Wall -pedantic-errors -Wshadow -Wextra"
 description = "Compiler errors and warnings"
-type = "append"
+method = "append"
 
 [[Environment]]
 name = "CFLAGS"
 value = "-std=c99"
 description = "C language specification"
-type = "append"
+method = "append"
 
 [[Environment]]
 name = "CXXFLAGS"
 value = "-std=c++98"
 description = "C++ language specification"
-type = "append"
+method = "append"
 
 [[Environment]]
 name = "CPPFLAGS"
 value = "-MT $@ -MMD -MP -MF $(@:%.o=%.Td)"
 description = "Autodependency"
-type = "append"
+method = "append"
 
 [[Environment]]
 name = "CPPFLAGS"
 value = "-Wa,-a,-ad,-alms=$(@:%.o=%.lst)"
 description = "Generate listing"
-type = "append"
+method = "append"
 
 [[Environment]]
 condition = "'${TARGET}' == 'dbg'"
 name = "CPPFLAGS"
 value = "-g3 -Og -gdwarf-2 -DDEBUG"
 description = "Debug flags"
-type = "append"
+method = "append"
 
 [[Environment]]
 condition = "'${TARGET}' == 'rel'"
 name = "CPPFLAGS"
 value = "-O3 -DNDEBUG"
 description = "Debug flags"
-type = "append"
+method = "append"
 
 # ------------------------------------------------------------------------------
 
@@ -123,17 +123,17 @@ type = "append"
 name = "CPPFLAGS"
 value = "-Iinc/"
 description = "Add header include directory to compiler path"
-type = "append"
+method = "append"
 
 [[Environment]]
 name = "CPPFLAGS"
 value = "-Isrc/"
 description = "Add source directory to compiler path"
-type = "append"
+method = "append"
 
 [[Environment]]
 condition = "'${PORT_NAME}' != ''"
 name = "CPPFLAGS"
 value = "-Iport/"
 description = "Add source directory to compiler path"
-type = "append"
+method = "append"
