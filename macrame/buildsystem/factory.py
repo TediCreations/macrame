@@ -3,15 +3,16 @@
 """Build System Factory."""
 
 from ..core.exceptions import UserInputError
+from .adt import BuildManager
 from .makefile import MakefileBuildManager
 
 
-class BuildFactory:
+class BuildFactory:  # pylint: disable=R0903
 	"""Factory that creates the build system automatically."""
 
 	def __init__(self, project_path, port_name, force_remote) -> None:
 		"""
-		Initialization.
+		Initialization of the build factory.
 
 		param: project_path The root directory of the project.
 		param: port_name The name of the port.
@@ -27,5 +28,6 @@ class BuildFactory:
 		else:
 			raise UserInputError("Could not build the project")
 
-	def get_manager(self):
+	def get_manager(self) -> BuildManager:
+		"""Returns the build manager."""
 		return self.build_manager

@@ -6,16 +6,15 @@ from abc import ABC
 from abc import abstractmethod
 
 
-class ConfigLoader(ABC):
-	"""Abstract data type for loading the config"""
+class ConfigLoader(ABC):  # pylint: disable=R0903
+	"""Abstract data type for loading the config."""
 
 	@abstractmethod
 	def get(self) -> list:
 		"""Get the list of configs."""
 
 
-class ConfigProcessor(ABC):
-
+class ConfigProcessor(ABC):  # pylint: disable=R0903
 	"""Abstract data type for processing the config."""
 
 	@abstractmethod

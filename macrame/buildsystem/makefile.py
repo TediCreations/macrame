@@ -27,11 +27,11 @@ def is_makefile_exist():
 	return rv
 
 
-class MakefileConfigLoader(ConfigLoader):
+class MakefileConfigLoader(ConfigLoader):  # pylint: disable=R0903
 
-	"""Loader for the config of Makefile based builds"""
+	"""Loader for the config of Makefile based builds."""
 
-	def __init__(self, project_path: str, port_name) -> None:
+	def __init__(self, project_path: str, port_name: str) -> None:
 		"""
 		Constructor for the makefile loader
 
@@ -41,27 +41,26 @@ class MakefileConfigLoader(ConfigLoader):
 		self.project_path = project_path
 		self.port_name = port_name
 
-		self.configList = list()
+		self.config_list = []
 
 		# Load the config
 		self._load()
 
 	def _load(self) -> None:
-		"""Loads the config"""
+		"""Loads the config."""
 
 		# Load config
 		# 1st (mandatory/default)
 		dir_path = os.path.dirname(os.path.realpath(__file__))
 		file_path = os.path.join(dir_path, "default.toml")
 		system_config = toml.load(file_path)
-		self.configList.append(system_config)
+		self.config_list.append(system_config)
 
 		# Root config
 		# 2nd (optional)
-		# TODO: Add feature 'root config' to loader
 		root_config = None
 		if root_config is not None:
-			self.configList.append(root_config)
+			self.config_list.append(root_config)
 
 		# Load port environment variables
 		# 3nd (optional)
@@ -72,39 +71,44 @@ class MakefileConfigLoader(ConfigLoader):
 
 			if os.path.isfile(file_path):
 				port_config = toml.load(file_path)
-				self.configList.append(port_config)
+				self.config_list.append(port_config)
 
-		return self.configList
+		return self.config_list
 
 	def get(self) -> list:
-		"""Get the list of configs"""
+		"""Get the list of configs."""
 
-		return self.configList
+		return self.config_list
 
 
 class MakefileConfigProcessor(ConfigProcessor):
-	"""Processor for the config of Makefile based builds"""
+	"""Processor for the config of Makefile based builds."""
 
-	def __init__(self, configLoader) -> None:
+	def __init__(self, config_loader) -> None:
+		"""
+		Initialises the makefile config processor.
+
+		param: config_loader: The configuration loader.
+		"""
 
 		# List of supported config types
-		configTypeList = [Tool, Environment]
+		config_type_list = [Tool, Environment]
 
 		# Turn config list into a dictionary
-		self.configTypeDict = dict()
-		for configType in configTypeList:
-			configTypeName = configType.__name__
-			self.configTypeDict[configTypeName] = configType
+		self.config_type_dict = {}
+		for configType in config_type_list:
+			config_type_name = configType.__name__
+			self.config_type_dict[config_type_name] = configType
 
 		# Appent partial config to global config
-		self.config = dict()
-		configList = configLoader.get()
-		for config in configList:
+		self.config = {}
+		config_list = config_loader.get()
+		for config in config_list:
 			self._append_to_config(config)
 
-	def _append_to_config(self, partial_config: dict):
+	def _append_to_config(self, partial_config: dict) -> None:
 		"""
-		Appent partial config to global config
+		Appent partial config to global config.
 
 		param: partial_config Partial config to be appented
 		"""
@@ -112,32 +116,32 @@ class MakefileConfigProcessor(ConfigProcessor):
 		if partial_config is None:
 			return
 
-		for configName in partial_config:
-			config_list = partial_config[configName]
+		for config_name in partial_config:
+			config_list = partial_config[config_name]
 			for config_element in config_list:
 
 				# Convert the dict to a valid configuration
-				config_obj = self.configTypeDict[configName](config_element)
+				config_obj = self.config_type_dict[config_name](config_element)
 
 				# Create dict if it does not exist
-				if configName not in self.config:
-					self.config[configName] = dict()
-				configType = self.config[configName]
+				if config_name not in self.config:
+					self.config[config_name] = {}
+				config_type = self.config[config_name]
 
 				# Combine
-				if config_obj.getLabel() not in configType:
-					configType[config_obj.getLabel()] = config_obj
+				if config_obj.getLabel() not in config_type:
+					config_type[config_obj.getLabel()] = config_obj
 				else:
-					configType[config_obj.getLabel()] = configType[config_obj.getLabel()] + config_obj
+					config_type[config_obj.getLabel()] = config_type[config_obj.getLabel()] + config_obj
 
 	def __str__(self):
 
 		txt = ""
 		for key, value in self.config.items():
 			config_category_name = key
-			configCategory = value
-			for key, value in configCategory.items():
-				txt += f"[{config_category_name}][{key}]\n"
+			config_category = value
+			for config_category_key, _ in config_category.items():
+				txt += f"[{config_category_name}][{config_category_key}]\n"
 
 		return txt
 
@@ -184,14 +188,14 @@ class MakefileBuildManager(BuildManager):
 			self.port_name = self.ports[0]
 
 		# Load the config
-		configLoader = MakefileConfigLoader(project_path, port_name)
+		config_loader = MakefileConfigLoader(project_path, port_name)
 
 		# Process the config
-		configProcessor = MakefileConfigProcessor(configLoader)
+		config_processor = MakefileConfigProcessor(config_loader)
 
-		self._set_env_variables(configProcessor, configProcessor.config, makefile_dirpath, project_path)
+		self._set_env_variables(config_processor, makefile_dirpath, project_path)
 
-	def _set_env_variables(self, configProcessor: ConfigProcessor, config: dict, makefile_dirpath, project_path) -> None:
+	def _set_env_variables(self, config_processor: ConfigProcessor, makefile_dirpath: str, project_path: str) -> None:
 		"""
 		Set the environment variables
 
@@ -237,14 +241,14 @@ class MakefileBuildManager(BuildManager):
 		os.environ["BUILDSYSTEM_DIRPATH"] = makefile_dirpath
 
 		# Set environment variables
-		configProcessor.handle()
+		config_processor.handle()
 
 		# Find all files
-		as_srcs_list = list()
-		c_srcs_list = list()
-		cxx_srcs_list = list()
+		as_srcs_list = []
+		c_srcs_list = []
+		cxx_srcs_list = []
 
-		for path, subdirs, files in os.walk("src"):
+		for path, _, files in os.walk("src"):
 			for name in files:
 				relative_filepath = os.path.join(path, name)
 				if relative_filepath.endswith(".s"):
@@ -255,7 +259,7 @@ class MakefileBuildManager(BuildManager):
 					cxx_srcs_list.append(relative_filepath)
 
 		if self.port_name is not None:
-			for path, subdirs, files in os.walk("port/" + self.port_name):
+			for path, _, files in os.walk("port/" + self.port_name):
 				for name in files:
 					relative_filepath = os.path.join(path, name)
 					if relative_filepath.endswith(".s"):
