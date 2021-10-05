@@ -1,6 +1,6 @@
 import os
-import sys
 import re
+import ast
 from abc import ABC, abstractmethod
 from ..core.version import Version
 # from ..core.utils import typify_string
@@ -118,8 +118,8 @@ class Config(ABC):
 		"""
 		try:
 			getattr(self, attribute_string)
-		except AttributeError:
-			raise MandatoryConfigAttributeMissing(self, attribute_string)
+		except AttributeError as e:
+			raise MandatoryConfigAttributeMissing(self, attribute_string) from e
 
 	def _verify_optional_attribute_or_None(self, attribute_string: str):
 		"""
@@ -152,7 +152,7 @@ class Config(ABC):
 		# regex = r"(?:\$\()(.*)(?:\))"  # ()
 		matches = re.finditer(regex, test_str, re.MULTILINE)
 
-		for matchNum, match in enumerate(matches, start=1):
+		for _, match in enumerate(matches, start=1):
 			# Find env variable
 			match_str = match.group(1)
 			value_str = os.getenv(match_str)
@@ -186,7 +186,6 @@ class Tool(Config):
 
 	def rule_checks(self) -> None:
 		"""Perform custom tests at init."""
-		pass
 
 	def doit(self) -> None:
 		"""Do the config."""
@@ -309,15 +308,9 @@ class Environment(Config):
 			condition = self._parse_env_variables(condition)
 
 			try:
-				condition_result = eval(condition)
-			except NameError as e:
-				# TODO: reraise Exception
-				print(f"'{e}' in Environment variable condition: ({self.condition})")
-				sys.exit(1)
-			except SyntaxError:
-				# TODO: reraise Exception
-				print(f"Invalid syntax in Environment variable condition: ({self.condition})")
-				sys.exit(1)
+				condition_result = ast.literal_eval(condition)
+			except (NameError, SyntaxError) as e:
+				raise NotValidConfiguration("Invalid syntax in Environment variable condition: ({self.condition})") from e
 
 		if condition_result:
 			value = self._parse_env_variables(self.value)
