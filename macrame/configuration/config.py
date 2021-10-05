@@ -6,7 +6,7 @@ from ..core.version import Version
 # from ..core.utils import typify_string
 from ..core.utils import run_command2
 from ..core.utils import acquireCliProgramVersion
-from ..core.colors import BLUE, YELLOW, RESET
+from ..core.colors import Color
 
 
 class NotValidConfiguration(Exception):
@@ -84,9 +84,9 @@ class Config(ABC):
 	def __str__(self):
 		"""Get string that represents the object."""
 
-		s = f"[{BLUE}{self.__class__.__name__}{RESET}]\n"
+		s = f"[{Color.BLUE}{self.__class__.__name__}{Color.RESET}]\n"
 		for k, v in self.__dict__.items():
-			s += f"{k}: {YELLOW}{v}{RESET}\n"
+			s += f"{k}: {Color.YELLOW}{v}{Color.RESET}\n"
 
 		return s
 

@@ -2,6 +2,7 @@
 
 import subprocess
 import os
+import sys
 import re
 import ast
 import shutil
@@ -132,6 +133,23 @@ def egrep(keywords, whole_words=False):
 	cmd = f"grep -E {grep_flags} '{keywords}' src/ inc/ port/ || true"
 	rv = run_command(cmd)
 	return rv
+
+
+def terminal_supports_color():
+	"""
+	Returns True if the running system's terminal supports color, and False
+	otherwise.
+
+	Taken from Django
+	https://github.com/django/django/blob/main/django/core/management/color.py
+	"""
+	plat = sys.platform
+	supported_platform = plat != 'Pocket PC' and (plat != 'win32' or 'ANSICON' in os.environ)
+
+	# isatty is not always implemented, #6223.
+	is_a_tty = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
+	return supported_platform and is_a_tty
+
 
 def typify_string(string: str):
 	"""
