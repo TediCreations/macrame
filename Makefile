@@ -28,8 +28,8 @@ test:
 
 .PHONY: lint
 lint:
-#	 @pylint macrame
 	@pylint macrame
+#	 @pylint tests
 
 .PHONY: clean
 clean:
