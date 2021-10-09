@@ -1,22 +1,16 @@
 #!/usr/bin/env python
 
-"""
-Todo command
-"""
+"""Todo command."""
 
 from ..core.cli import Command
 from ..core.utils import egrep
 
 
 class TodoCommand(Command):
-	"""
-	Lists programmer's todos
-	"""
+	"""Lists programmer's todos."""
 
 	def config(self):
-		"""
-		Configuration of arguments
-		"""
+		"""Configuration of arguments."""
 
 		# Whole words
 		self.subparser.add_argument(
@@ -37,7 +31,9 @@ class TodoCommand(Command):
 
 	def run(self, args):
 		"""
-		Runs the command
+		Runs the command.
+
+		args: The command arguments.
 		"""
 		keywords = args.keywords
 		whole_words = args.whole_words

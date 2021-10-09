@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+"""Command line interface parser."""
+
 from .exceptions import UserInputError
 import argparse
 # import shtab
@@ -11,20 +13,20 @@ _parser = None
 _subparser = None
 
 
-class Parser(object):
+class Parser:
 
 	"""
 	Supports the creation of commandline argument subcommands
 	with support from argparse.
 	"""
 
-	def __init__(self, name, description, epilog):
+	def __init__(self, name, description: str, epilog: str) -> None:
 		"""
-		Creates an argument parser
+		Creates an argument parser.
 
-		name: The name of the program
-		description: Text explaining what the program does
-		epilog: Text at the end of the help section
+		name: The name of the program.
+		description: Text explaining what the program does.
+		epilog: Text at the end of the help section.
 		"""
 
 		global _parser
@@ -46,18 +48,20 @@ class Parser(object):
 		self.config()
 		_parser = self.parser
 
-	def error(self, message):
+	def error(self, message: str) -> None:
 		"""
-		Print error message and exit
+		Print error message and exit.
+
+		param: message
 		"""
 		# TODO: Is it good to quit from argparse like this?
 		# _parser.error("\033[0;31m" + str(message) + "\033[0m")
 		print("\033[0;31m[ERROR]\t" + str(message) + "\033[0m")
 		sys.exit(1)
 
-	def config(self):
+	def config(self) -> None:
 		"""
-		Configuration of arguments
+		Configuration of arguments.
 
 		Example
 
@@ -69,7 +73,8 @@ class Parser(object):
 		"""
 		pass
 
-	def handle(self):
+	def handle(self) -> int:
+
 		args = _parser.parse_args()
 		subcommand = _parser.parse_args().cmd
 
@@ -94,7 +99,7 @@ class Parser(object):
 		pass
 
 
-class Command(object):
+class Command:
 	"""
 	Supports the creation of commandline argument subcommands
 	with support from argparse.
@@ -102,10 +107,10 @@ class Command(object):
 
 	def __init__(self, name, help=None):
 		"""
-		Creates an argument command
+		Creates an argument command.
 
-		name: The name of the command
-		help: Description of the command or None
+		name: The name of the command.
+		help: Description of the command or None.
 		"""
 		self.name = name
 		global _parser
@@ -129,9 +134,9 @@ class Command(object):
 
 	def error(self, message):
 		"""
-		Print error message and exit
+		Print error message and exit.
 
-		message: The error message
+		message: The error message.
 		"""
 		# TODO: Is it good to quit from argparse like this?
 		# _parser.error("\033[0;31m" + str(message) + "\033[0m")
@@ -140,7 +145,7 @@ class Command(object):
 
 	def config(self):
 		"""
-		Configuration of arguments
+		Configuration of arguments.
 		"""
 		# Example
 		# self.subparser.add_argument(
@@ -151,9 +156,9 @@ class Command(object):
 
 	def run(self, args):
 		"""
-		Executes the command
+		Executes the command.
 
-		args: The command arguments
+		args: The command arguments.
 		"""
 		print(f"Command '{self.name}' just run!")
 		return 0
@@ -163,16 +168,16 @@ class Command(object):
 		Check if this is a valid directory
 		else exit with a message.
 
-		directoryPath: The directory path to check for validity
+		directoryPath: The directory path to check for validity.
 		"""
 		if not os.path.isdir(directoryPath):
 			self.error(f"The directory {directoryPath} does not exist")
 
 	def addArgument(self, name):
 		"""
-		Gets the value of an argument
+		Gets the value of an argument.
 
-		name: The argument name
+		name: The argument name.
 		"""
 
 		args = vars(_parser.parse_args())
@@ -186,9 +191,9 @@ class Command(object):
 
 	def getArgument(self, name):
 		"""
-		Gets the value of an argument
+		Gets the value of an argument.
 
-		name: The argument name
+		name: The argument name.
 		"""
 
 		args = vars(_parser.parse_args())

@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Build command
-"""
+"""Build command."""
 
 import os
 from ..core.cli import Command
@@ -11,14 +9,10 @@ from ..buildsystem.factory import BuildFactory
 
 
 class BuildCommand(Command):
-	"""
-	Builds the software
-	"""
+	"""Builds the software."""
 
 	def config(self):
-		"""
-		Configuration of arguments
-		"""
+		"""Configuration of arguments."""
 
 		# Local or remote makefile
 		self.subparser.add_argument(
@@ -39,7 +33,9 @@ class BuildCommand(Command):
 
 	def run(self, args):
 		"""
-		Runs the command
+		Runs the command.
+
+		args: The command arguments.
 		"""
 		project_path = os.path.abspath(args.directory)
 

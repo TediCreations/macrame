@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-New command
-"""
+"""New command."""
 
 import os
 from ..core.cli import Command
@@ -11,13 +9,13 @@ from ..core.utils import copytree
 
 
 class NewCommand(Command):
-	"""
-	Instantiates a new macrame project
-	"""
+	"""Instantiates a new macrame project."""
 
 	def run(self, args):
 		"""
-		Runs the command
+		Runs the command.
+
+		args: The command arguments.
 		"""
 		rv = 0
 

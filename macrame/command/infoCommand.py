@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Info command
-"""
+"""Info command."""
 
 import os
 from ..core.cli import Command
@@ -10,13 +8,13 @@ from ..core.utils import listPortNames
 
 
 class InfoCommand(Command):
-	"""
-	Shows project specific information
-	"""
+	"""Shows project specific information."""
 
 	def run(self, args):
 		"""
-		Runs the command
+		Runs the command.
+
+		args: The command arguments.
 		"""
 		cwd = self.getArgument("directory")
 		project_name = os.path.basename(os.path.normpath(cwd))

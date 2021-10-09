@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Tool command
-"""
+"""Tool command."""
 
 import argparse
 import toml
@@ -11,14 +9,10 @@ from ..configuration.config import Tool
 
 
 class ToolCommand(Command):
-	"""
-	Tool Command
-	"""
+	"""Tool Command."""
 
 	def config(self):
-		"""
-		Configuration of arguments
-		"""
+		"""Configuration of arguments."""
 		self.subparser.add_argument(
 			"-f", "--file",
 			help="A readable file",
@@ -29,7 +23,9 @@ class ToolCommand(Command):
 
 	def run(self, args):
 		"""
-		Runs the command
+		Runs the command.
+
+		args: The command arguments.
 		"""
 
 		if args.file is not None:

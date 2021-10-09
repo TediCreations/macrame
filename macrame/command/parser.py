@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Parser and build commands
-"""
+"""Parser and build commands."""
 
 import io
 import os
@@ -13,14 +11,10 @@ from .. import __version__
 
 
 class MyParser(Parser):
-	"""
-	Parser for the buildsystem
-	"""
+	"""Parser for the buildsystem."""
 
 	def config(self):
-		"""
-		Configuration of arguments
-		"""
+		"""Configuration of arguments."""
 
 		cwd_path = os.path.abspath(os.getcwd())
 		self.parser.add_argument(
@@ -45,7 +39,9 @@ class MyParser(Parser):
 
 	def run(self, args):
 		"""
-		Configuration of arguments
+		Configuration of arguments.
+
+		args: The command arguments.
 		"""
 		# Version information
 		if args.version:

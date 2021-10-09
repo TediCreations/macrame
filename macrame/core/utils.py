@@ -34,13 +34,14 @@ def which(program: str) -> Optional[str]:
 
 def copytree(src: str, dst: str, symlinks=False, ignore=None) -> None:
 	"""
-	Copy a file or all the contents of a directory
+	Copy a file or all the contents of a directory.
 
 	param: src The source file or directory
 	param: dst The source file or directory
 	param: symlinks Do you want symlinks to be copied
 	param: ignore What files to ignore
 	"""
+
 	for item in os.listdir(src):
 		s = os.path.join(src, item)
 		d = os.path.join(dst, item)
@@ -52,7 +53,7 @@ def copytree(src: str, dst: str, symlinks=False, ignore=None) -> None:
 
 def acquireCliProgramVersion(s):
 	"""
-	Acquire the version of a cli program
+	Acquire the version of a cli program.
 
 	param s: The output of the programm version string.
 
@@ -69,7 +70,7 @@ def acquireCliProgramVersion(s):
 
 def toString(obj):
 	"""
-	Convert an object to string representation
+	Convert an object to string representation.
 
 	param obj: The object to convert to string
 	"""
@@ -99,7 +100,7 @@ def run_command(cmd):
 
 def run_command2(cmd):
 	"""
-	Run a shell command
+	Run a shell command.
 
 	Returns the stdout
 	"""
@@ -177,7 +178,7 @@ def terminal_supports_color():
 
 def typify_string(string: str):
 	"""
-	Try to convert a string of builtin python type
+	Try to convert a string of builtin python type.
 
 	param: string The string to be converted.
 

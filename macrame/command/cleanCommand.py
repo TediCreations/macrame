@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Clean command
-"""
+"""Clean command."""
 
 import os
 from ..core.cli import Command
@@ -10,14 +8,10 @@ from ..buildsystem.factory import BuildFactory
 
 
 class CleanCommand(Command):
-	"""
-	Removes generated files
-	"""
+	"""Removes generated files."""
 
 	def config(self):
-		"""
-		Configuration of arguments
-		"""
+		"""Configuration of arguments."""
 
 		# Local or remote makefile
 		self.subparser.add_argument(
@@ -29,7 +23,9 @@ class CleanCommand(Command):
 
 	def run(self, args):
 		"""
-		Runs the command
+		Runs the command.
+
+		args: The command arguments.
 		"""
 		project_path = os.path.abspath(args.directory)
 

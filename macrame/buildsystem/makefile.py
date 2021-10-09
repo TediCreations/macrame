@@ -167,13 +167,11 @@ class MakefileConfigProcessor(ConfigProcessor):
 
 
 class MakefileBuildManager(BuildManager):
-	"""
-	Manages the way that Make is called
-	"""
+	"""Manages the way that Make is called."""
 
 	def __init__(self, project_path, port_name=None, use_local_makefile=True) -> None:
 		"""
-		Initialization
+		Initialization.
 
 		param: project_path The root directory of the project.
 		param: port_name   The name of the port.
