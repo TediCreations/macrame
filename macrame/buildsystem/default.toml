@@ -2,6 +2,24 @@
 #    Ccache
 
 [[Tool]]
+name = "python"
+arg = "--version"
+compare = ">="
+version = "3.6"
+
+[[Tool]]
+name = "make"
+arg = "--version"
+compare = "=="
+version = "4.1"
+
+[[Tool]]
+name = "git"
+arg = "--version"
+compare = ">="
+version = "2.17.1"
+
+[[Tool]]
 name = "ccache"
 arg = "--version"
 compare = "=="
@@ -24,13 +42,13 @@ description = "Default cache tool for the build toolchain"
 [[Tool]]
 name = "gcc"
 arg = "--version"
-compare = "=="
+compare = ">="
 version = "7.5"
 
 [[Tool]]
 name = "g++"
 arg = "--version"
-compare = "=="
+compare = ">="
 version = "7.5"
 
 # ------------------------------------------------------------------------------
