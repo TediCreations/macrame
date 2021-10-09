@@ -14,6 +14,8 @@ from ..core.utils import listPortNames
 from ..resource import get_abs_resourse_path
 from ..configuration.config import Tool
 from ..configuration.config import Environment
+from ..configuration.config import MakefileRule
+from ..configuration.config import Configurator
 
 
 def is_makefile_exist():
@@ -84,15 +86,19 @@ class MakefileConfigLoader(ConfigLoader):  # pylint: disable=R0903
 class MakefileConfigProcessor(ConfigProcessor):
 	"""Processor for the config of Makefile based builds."""
 
-	def __init__(self, config_loader) -> None:
+	def __init__(self, project_path: str, port_name: str, config_loader: ConfigLoader) -> None:
 		"""
 		Initialises the makefile config processor.
 
+		params: project_path: The absolute directory to the project path
+		params: port_name: The port name or None
 		param: config_loader: The configuration loader.
 		"""
+		self.project_path = project_path
+		self.port_name = port_name
 
 		# List of supported config types
-		config_type_list = [Tool, Environment]
+		config_type_list = [Tool, Environment, MakefileRule]
 
 		# Turn config list into a dictionary
 		self.config_type_dict = {}
@@ -137,19 +143,27 @@ class MakefileConfigProcessor(ConfigProcessor):
 	def __str__(self):
 
 		txt = ""
-		for key, value in self.config.items():
-			config_category_name = key
-			config_category = value
+		for config_category_name, config_category in self.config.items():
 			for config_category_key, _ in config_category.items():
 				txt += f"[{config_category_name}][{config_category_key}]\n"
 
 		return txt
 
 	def handle(self) -> None:
-		"""Applies the config"""
-		for key in self.config["Environment"]:
-			env_var = self.config["Environment"][key]
-			env_var.doit()
+		"""Applies the config."""
+
+		configurator = Configurator(self.project_path, self.port_name)
+
+		for config_type_name, config_type in self.config_type_dict.items():
+
+			if config_type_name in self.config:
+				config_dict = self.config[config_type_name]
+
+				for key, _ in config_dict.items():
+					env_var = config_dict[key]
+					configurator.load(env_var)
+
+		configurator.handle()
 
 
 class MakefileBuildManager(BuildManager):
@@ -191,7 +205,7 @@ class MakefileBuildManager(BuildManager):
 		config_loader = MakefileConfigLoader(project_path, port_name)
 
 		# Process the config
-		config_processor = MakefileConfigProcessor(config_loader)
+		config_processor = MakefileConfigProcessor(project_path, port_name, config_loader)
 
 		self._set_env_variables(config_processor, makefile_dirpath, project_path)
 

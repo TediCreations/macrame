@@ -6,6 +6,7 @@ from ..core.version import Version
 # from ..core.utils import typify_string
 from ..core.utils import run_command2
 from ..core.utils import acquireCliProgramVersion
+from ..core.utils import which
 from ..core.colors import Color
 
 
@@ -106,10 +107,6 @@ class Config(ABC):
 	def rule_checks(self) -> None:
 		"""Perform custom tests at init."""
 
-	@abstractmethod
-	def doit(self) -> None:
-		"""Do the config."""
-
 	def _verify_mandatory_attribute(self, attribute_string: str):
 		"""
 		Set an attribute given the string representation.
@@ -178,55 +175,64 @@ class Tool(Config):
 
 	def get_mandatory_atrributes_list(self) -> list:
 		"""Return the mandatory attributes."""
-		return None
+
+		attribute_list = [
+			"name"
+		]
+
+		return attribute_list
 
 	def get_optional_atrributes_list(self) -> list:
 		"""Return the optional attributes."""
-		return None
+
+		attribute_list = [
+			"arg",
+			"compare",
+			"version"
+		]
+
+		return attribute_list
 
 	def rule_checks(self) -> None:
 		"""Perform custom tests at init."""
 
-	def doit(self) -> None:
-		"""Do the config."""
-		raise NotImplementedError()
-
 	def __add__(self, other):
+		# TODO: Add properly
 		return self
 
-	def check(self) -> bool:
+	def check(self) -> None:
 		"""
 		Checks a tools existance in the system
 		and its version.
 		"""
+		# Check existance
+		isAvailable = which(self.name)
+		if isAvailable is None:
+			raise Exception(f"{self.name} not found!")
 
+		# Check version
 		cmd = self.name + " " + self.arg
 
-		string_with_actual_version = str(run_command2(cmd))
+		raw_version_string = str(run_command2(cmd))
+		parsed_version_string = acquireCliProgramVersion(raw_version_string)
 
-		string_with_actual_version = acquireCliProgramVersion(string_with_actual_version)
-
-		result = False
-		try:
-			actual_version = Version(string_with_actual_version)
-		except Exception:
-			print(f"'{self.name}' is not available")
-			result = None
+		actual_version = Version(parsed_version_string)
 		desired_version = Version(self.version)
 
-		if result is not None:
-			if self.compare == "==":
-				result = actual_version == desired_version
-			elif self.compare == ">=":
-				result = actual_version >= desired_version
-			elif self.compare == ">":
-				result = actual_version > desired_version
-			elif self.compare == "<=":
-				result = actual_version <= desired_version
-			elif self.compare == "<":
-				result = actual_version < desired_version
+		result = False
+		if self.compare == "==":
+			result = actual_version == desired_version
+		elif self.compare == ">=":
+			result = actual_version >= desired_version
+		elif self.compare == ">":
+			result = actual_version > desired_version
+		elif self.compare == "<=":
+			result = actual_version <= desired_version
+		elif self.compare == "<":
+			result = actual_version < desired_version
 
-		return result
+		if result is False:
+			raise Exception(f"{self.name} is not {self.compare} {self.version}")
 
 
 class Environment(Config):
@@ -267,11 +273,6 @@ class Environment(Config):
 			print(f"self.method: {self.method}")
 			raise InvalidAttribute(self, "method")
 
-	def doit(self) -> None:
-		"""Do the config."""
-
-		self._register()
-
 	# TODO: Continue with features (condition)
 	def __add__(self, other):
 
@@ -299,7 +300,7 @@ class Environment(Config):
 
 		return rv
 
-	def _register(self) -> None:
+	def register(self) -> None:
 		"""Registers the environment variable."""
 
 		condition_result = True
@@ -322,3 +323,135 @@ class Environment(Config):
 					new_value = os.environ[self.name] + " " + new_value
 
 			os.environ[self.name] = new_value
+
+
+class MakefileRule(Config):
+
+	"""
+	Configuration class for a Makefile rule.
+
+	targets: prerequisites
+		commands
+	"""
+
+	def getLabel(self) -> str:
+		"""Return the label(name) of the config"""
+
+		return self.targets
+
+	def get_mandatory_atrributes_list(self) -> list:
+		"""Return the mandatory attributes."""
+
+		attribute_list = [
+			"targets",
+			"prerequisites"
+		]
+
+		return attribute_list
+
+	def get_optional_atrributes_list(self) -> list:
+		"""Return the optional attributes."""
+
+		attribute_list = [
+			"command",
+			"description"
+		]
+
+		return attribute_list
+
+	def rule_checks(self) -> None:
+		"""Perform custom tests at init."""
+		pass
+
+	def generate_rule(self) -> None:
+		"""Do the config."""
+		# project_dirpath = "XXX"
+		# print(f"Project: {project_dirpath}")
+
+		txt = ""
+		if self.phony:
+			txt += f"PHONY: {self.targets}\n"
+		txt += f"{self.targets}:"
+		if self.prerequisites:
+			txt += f" {self.prerequisites}\n"
+		else:
+			txt += "\n"
+		if self.command:
+			stripped_command = self.command.rstrip()
+			txt += f"{stripped_command}\n"
+		else:
+			txt += ":\n"
+		txt += "\n"
+
+		return txt
+
+
+class Configurator:
+	"""Configures a config."""
+
+	def __init__(self, project_path: str, port_name: str) -> None:
+		"""
+		Initialization of the configurator.
+
+		param: project_path The root directory of the project.
+		param: port_name The name of the port.
+		"""
+		self.project_path = project_path
+		self.port_name = port_name
+
+		# Generated makefile
+		self.makefile_text = ""
+
+	def load(self, config: Config) -> None:
+		"""
+		Loads a given config.
+
+		param: config The config object
+		"""
+		config_type = type(config)
+		if config_type is Tool:
+			config.check()
+		elif config_type is Environment:
+			config.register()
+		elif config_type is MakefileRule:
+			rule = config.generate_rule()
+			self.makefile_text += rule
+		else:
+			raise Exception(f"Not able to configure '{config_type}'")
+
+	def handle(self) -> None:
+		"""Handles a given config."""
+
+		# TODO: Add support for TARGET selection
+		target = "dbg"
+
+		# Generate the Makefile
+		if self.port_name is not None:
+			makefile_dirpath = os.path.join(self.project_path, "gen", self.port_name, target)
+		else:
+			makefile_dirpath = os.path.join(self.project_path, "gen", target)
+
+		makefile_filepath = os.path.join(makefile_dirpath, "Makefile")
+
+		# Create the makefile directory ifit does not exist
+		if not os.path.exists(makefile_dirpath):
+			os.makedirs(makefile_dirpath)
+			# print(f"The new directory '{makefile_dirpath}' is created!")
+
+		# Check if file exists
+		if os.path.isfile(makefile_filepath):
+			# Try to update it
+			with open(makefile_filepath, 'r+') as f:
+				makefile_text = f.read()
+
+				if makefile_text != self.makefile_text:
+					# Differences were found
+					f.seek(0)
+					f.write(self.makefile_text)
+					f.truncate()
+					# print(f"Updated {makefile_filepath}")
+		else:
+			# Write it since it does not exist
+			with open(makefile_filepath, 'w') as f:
+				f.write(self.makefile_text)
+				# print(f"Wrote {makefile_filepath}")

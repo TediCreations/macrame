@@ -197,3 +197,15 @@ method = "append"
 
 #LDFLAGS   += -L thirdparty/Tiva/driverlib/gcc\
 #             -ldriver
+
+# ------------------------------------------------------------------------------
+# Makefile rules
+
+[[MakefileRule]]
+phony = true
+targets = "flash"
+prerequisites = "$(BIN_OUTDIR)$(PROJ_NAME).bin"
+command = """
+	@lm4flash -v -E $<
+"""
+description = "Flashing with Segger"

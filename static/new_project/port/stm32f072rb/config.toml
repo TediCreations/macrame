@@ -155,3 +155,40 @@ name = "CPPFLAGS"
 value = "-Ithirdparty/CMSIS/Include/"
 description = "CMSIS Path"
 method = "append"
+
+# ------------------------------------------------------------------------------
+# Makefile rules
+
+[[MakefileRule]]
+phony = true
+targets = "flash"
+prerequisites = "$(BIN_OUTDIR)flash.jlink"
+command = """
+	@JLinkExe -CommanderScript $<
+"""
+description = "Flashing with Segger"
+
+[[MakefileRule]]
+phony = true
+targets = "remoteDebug"
+prerequisites = ""
+command = """
+	@JLinkGDBServer -select USB -device STM32F072RB -endian little -if SWD -speed 4000 -noir -noLocalhostOnly
+"""
+description = "Remote debugging with Segger"
+
+[[MakefileRule]]
+phony = true
+targets = "$(BIN_OUTDIR)flash.jlink"
+prerequisites = "$(BIN_OUTDIR)$(PROJ_NAME).bin"
+command = """
+	@$(ECHO) "si 1" > $@
+	@$(ECHO) "device STM32F072RB" >> $@
+	@$(ECHO) "speed 4000" >> $@
+	@$(ECHO) "erase" >> $@
+	@$(ECHO) "loadbin $<, 0x00" >> $@
+	@$(ECHO) "r" >> $@
+	@$(ECHO) "g" >> $@
+	@$(ECHO) "exit" >> $@
+"""
+description = "Script used by the debugger"

@@ -355,6 +355,7 @@ endif
 
 AUX = $(MAKEFILE_FILEPATH)
 
+# TODO: Add new generated Makefile addition to AUX.
 #ifdef PORT_NAME
 #  ifneq (,$(wildcard port/$(PORT_NAME)/Makefile))
 #    AUX += port/$(PORT_NAME)/Makefile
@@ -422,9 +423,9 @@ OBJS+= $(sort $(CXX_SRCs:%.cpp=$(OBJ_OUTDIR)%.o))
 #    Compiler
 #
 
-#ifdef PORT_NAME
-#  -include port/$(PORT_NAME)/Makefile
-#endif
+ifdef PORT_NAME
+  -include gen/$(PORT_NAME)/$(TARGET)/Makefile
+endif
 
 COMPILE.AS  ?= $(AS)  -c $< -o $@ $(CPPFLAGS) $(ASFLAGS)
 COMPILE.CC  ?= $(CC)  -c $< -o $@ $(CPPFLAGS) $(CFLAGS)
