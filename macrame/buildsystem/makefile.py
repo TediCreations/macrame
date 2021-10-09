@@ -127,7 +127,12 @@ class MakefileConfigProcessor(ConfigProcessor):
 			for config_element in config_list:
 
 				# Convert the dict to a valid configuration
-				config_obj = self.config_type_dict[config_name](config_element)
+				try:
+					config_obj = self.config_type_dict[config_name](config_element)
+				except KeyError:
+					# Skip not known configs
+					# TODO: Should an unknown config cause an error reaction?
+					continue
 
 				# Create dict if it does not exist
 				if config_name not in self.config:
