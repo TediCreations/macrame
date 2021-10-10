@@ -1,8 +1,9 @@
 import pytest
-from macrame.configuration.config import Environment
-from macrame.configuration.config import MandatoryConfigAttributeMissing
-from macrame.configuration.config import InvalidAttribute
-from macrame.configuration.config import OperationOnIncompatibleConfigs
+
+from macrame.configuration.config.environment import Environment
+from macrame.configuration.exceptions import MandatoryConfigAttributeMissing
+from macrame.configuration.exceptions import InvalidAttribute
+from macrame.configuration.exceptions import OperationOnIncompatibleConfigs
 
 
 def assert_environment_dict_equal(environment_object, desired_dict):
@@ -32,7 +33,7 @@ class TestClass:
 		}
 
 		a = Environment(data)
-		assert a.getLabel() == data['name']
+		assert a.get_label() == data['name']
 
 	def test_shall_raise_exception_when_name_is_not_configured(self):
 

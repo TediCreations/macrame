@@ -12,10 +12,10 @@ from .adt import BuildManager
 from ..core.utils import run_command
 from ..core.utils import listPortNames
 from ..resource import get_abs_resourse_path
-from ..configuration.config import Tool
-from ..configuration.config import Environment
-from ..configuration.config import MakefileRule
-from ..configuration.config import Configurator
+from ..configuration.config.tool import Tool
+from ..configuration.config.environment import Environment
+from ..configuration.config.makefilerule import MakefileRule
+from ..configuration.configurator import Configurator
 
 
 def is_makefile_exist():
@@ -140,10 +140,11 @@ class MakefileConfigProcessor(ConfigProcessor):
 				config_type = self.config[config_name]
 
 				# Combine
-				if config_obj.getLabel() not in config_type:
-					config_type[config_obj.getLabel()] = config_obj
+				name_of_type = config_obj.get_label()
+				if name_of_type not in config_type:
+					config_type[name_of_type] = config_obj
 				else:
-					config_type[config_obj.getLabel()] = config_type[config_obj.getLabel()] + config_obj
+					config_type[name_of_type] = config_type[name_of_type] + config_obj
 
 	def __str__(self):
 

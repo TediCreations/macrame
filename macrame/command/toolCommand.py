@@ -5,7 +5,7 @@
 import argparse
 import toml
 from ..core.cli import Command
-from ..configuration.config import Tool
+from ..configuration.config.tool import Tool
 
 
 class ToolCommand(Command):

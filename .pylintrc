@@ -7,3 +7,6 @@ good-names=
 	rv
 
 # disable=W,R,E,C
+
+# Code will have TODO's
+disable=W0511
